@@ -41,6 +41,7 @@ static void bcl2(t_md5 *md5, uint32_t *w)
     {
         set_f_g(md5, &f, &g, i);
         tmp = md5->d;
+        md5->d = md5->c;
         md5->c = md5->b;
         md5->b = leftrotate(md5->a + f + md5->k[i] + w[g], md5->r[i]) + md5->b;
         md5->a = tmp;
