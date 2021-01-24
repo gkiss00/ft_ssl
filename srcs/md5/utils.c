@@ -48,7 +48,8 @@ uint8_t     *get_new_msg(uint8_t *msg)
         new_msg[i] = msg[i];
         ++i;
     }
-    new_msg[i] = 'k';
+    new_msg[i] = 128;
+    ++i;
     while(i < new_len - 8){
         new_msg[i] = '\0';
         ++i;
