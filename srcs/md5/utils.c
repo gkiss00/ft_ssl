@@ -55,6 +55,7 @@ uint8_t     *get_new_msg(uint8_t *msg)
         ++i;
     }
     memcpy(new_msg + i, &len, 4);
+    i += 4;
     while(i < new_len){
         new_msg[i] = '\0';
         ++i;
