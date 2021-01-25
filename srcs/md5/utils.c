@@ -24,7 +24,7 @@ uint32_t    get_new_len(uint8_t *msg)
     if (new_len % 64 <= 56)
         new_len = new_len + (64 - (new_len % 64));
     else
-        new_len = new_len + (64 + (new_len % 64));
+        new_len = new_len + (64 + (64 - (new_len % 64)));
     return (new_len);
 }
 
@@ -38,26 +38,25 @@ uint8_t     *get_new_msg(uint8_t *msg)
     i = 0;
     new_msg = NULL;
     len = ft_strlen(msg);
-    new_len = len + 1;
-    if (new_len % 64 <= 56)
-        new_len = new_len + (64 - (new_len % 64));
-    else
-        new_len = new_len + (64 + (new_len % 64));
+    new_len = get_new_len(msg);
+    printf("len : %d\n", len);
+    printf("new : %d\n", new_len);
     new_msg = malloc(new_len);
     while(msg[i]){
         new_msg[i] = msg[i];
         ++i;
     }
-    new_msg[i] = 128;
+    new_msg[i] = 0x80;
     ++i;
     while(i < new_len - 8){
-        new_msg[i] = '\0';
+        new_msg[i] = 0x00;
         ++i;
     }
     memcpy(new_msg + i, &len, 4);
     i += 4;
+    printf("%d %d\n", i , new_len);
     while(i < new_len){
-        new_msg[i] = '\0';
+        new_msg[i] = 0x00;
         ++i;
     }
     return (new_msg);

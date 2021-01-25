@@ -78,7 +78,6 @@ uint8_t     *hash(uint8_t *msg)
 
     init_md5(&md5);
     new_msg = get_new_msg(msg);
-    printf("size : %d\n", get_new_len(msg));
     get_hashed(&md5, new_msg, msg);
 
     uint8_t *p;
