@@ -101,17 +101,18 @@ uint8_t *hash_sha256(uint8_t *msg){
     H[6] = 0x1f83d9ab;
     H[7] = 0x5be0cd19;
 
+    printf("1\n");
     for (uint32_t i = 0; i < nb_chunk; ++i) {
         hash_chunk(&chunk[i * 64]);
     }
+    printf("2\n");
     // Small indian shit
     for (uint32_t i = 0; i < 8; ++i) {
         H[i] = big_to_small_endian_32(H[i]);
     }
-    
-    uint8_t *hashed = malloc(33 * sizeof(uint8_t*));
-    memcpy(&hashed, &H[0], sizeof(H[0]));
-    //segfault here
+
+    uint8_t *hashed = malloc(33 * sizeof(uint8_t));
+    memcpy(&hashed[0], &H[0], sizeof(H[0]));
     memcpy(&hashed[4], &H[1], sizeof(H[1]));
     memcpy(&hashed[8], &H[2], sizeof(H[2]));
     memcpy(&hashed[12], &H[3], sizeof(H[3]));
@@ -120,6 +121,9 @@ uint8_t *hash_sha256(uint8_t *msg){
     memcpy(&hashed[24], &H[6], sizeof(H[6]));
     memcpy(&hashed[28], &H[7], sizeof(H[7]));
     hashed[32] = '\0';
-    printf("HASHED [%s]", hashed);
+    for (uint32_t i = 0; i < 32; ++i) {
+        printf("%02x", hashed[i]);
+    }
+    
     return hashed;
 }

@@ -6,7 +6,6 @@ void        ft_sha256(t_data *data)
     uint8_t     *hashed;
 
     i = 0;
-    puts("oui");
     while(i < ft_tablen(data->args))
     {
         if(data->contents[i] == NULL)
