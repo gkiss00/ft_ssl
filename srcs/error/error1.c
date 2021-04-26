@@ -17,6 +17,8 @@ static int check_type_args(char **argv)
 {
     if(ft_strcmp((uint8_t*)argv[1], (uint8_t*)"md5") == 0)
         return (0);
+    if(ft_strcmp((uint8_t*)argv[1], (uint8_t*)"sha256") == 0)
+        return (0);
     return (print_error(argv));
 }
 

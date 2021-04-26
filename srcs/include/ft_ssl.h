@@ -8,6 +8,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <string.h>
+# include <assert.h> 
 
 typedef struct          s_option
 {
@@ -49,5 +50,13 @@ void        ft_puttab(uint8_t **tab);
 void        free_tab(uint8_t **tab);
 
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
+
+uint64_t small_to_big_endian_64(uint64_t n);
+uint32_t big_to_small_endian_32(uint32_t n);
+uint32_t left_rotate_32(uint32_t value, unsigned int count);
+uint32_t right_rotate_32(uint32_t value, unsigned int count);
+
+void        ft_sha256(t_data *data);
+uint8_t *hash_sha256(uint8_t *msg);
 
 #endif
