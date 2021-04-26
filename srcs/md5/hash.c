@@ -81,7 +81,7 @@ static void hash_chunk(uint8_t *chunk) {
     h3 += d;
 }
 
-uint8_t     *hash(uint8_t *msg)
+uint8_t     *hash_md5(uint8_t *msg)
 {
     uint32_t len = strlen((char *)msg);
     uint32_t nb_chunk = (len / 64) + 1;

@@ -104,6 +104,11 @@ uint8_t *hash_sha256(uint8_t *msg){
     for (uint32_t i = 0; i < nb_chunk; ++i) {
         hash_chunk(&chunk[i * 64]);
     }
+    // Small indian shit
+    for (uint32_t i = 0; i < 8; ++i) {
+        H[i] = big_to_small_endian_32(H[i]);
+    }
+    
     uint8_t *hashed = malloc(33 * sizeof(uint8_t*));
     memcpy(&hashed, &H[0], sizeof(H[0]));
     //segfault here

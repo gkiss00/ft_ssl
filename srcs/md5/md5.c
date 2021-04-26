@@ -14,7 +14,7 @@ void        ft_md5(t_data *data)
         }
         else
         {
-            hashed = hash(data->contents[i]);
+            hashed = hash_md5(data->contents[i]);
         }
         ++i;
     }

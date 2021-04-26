@@ -32,7 +32,10 @@ void        hub(t_data *data);
 void        end(t_data *data);
 
 void        ft_md5(t_data *data);
-uint8_t     *hash(uint8_t *msg);
+uint8_t     *hash_md5(uint8_t *msg);
+
+void        ft_sha256(t_data *data);
+uint8_t     *hash_sha256(uint8_t *msg);
 
 int         check_error(int argc, char **argv);
 
@@ -56,7 +59,6 @@ uint32_t big_to_small_endian_32(uint32_t n);
 uint32_t left_rotate_32(uint32_t value, unsigned int count);
 uint32_t right_rotate_32(uint32_t value, unsigned int count);
 
-void        ft_sha256(t_data *data);
-uint8_t *hash_sha256(uint8_t *msg);
+
 
 #endif
