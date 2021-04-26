@@ -26,31 +26,12 @@ typedef struct		    s_data
     struct s_option     *opts;
 }                       t_data;
 
-typedef struct      s_md5
-{
-    uint32_t             h0;
-    uint32_t             h1;
-    uint32_t             h2;
-    uint32_t             h3;
-    uint32_t             a;
-    uint32_t             b;
-    uint32_t             c;
-    uint32_t             d;
-    uint32_t             r[64];
-    uint32_t             k[64];
-}                   t_md5;
-
 void        begin(t_data *data);
 void        hub(t_data *data);
 void        end(t_data *data);
 
 void        ft_md5(t_data *data);
 uint8_t     *hash(uint8_t *msg);
-void        fill_k(t_md5 *tmp);
-void        fill_r(t_md5 *tmp);
-uint8_t     *get_new_msg(uint8_t *msg);
-uint32_t    get_new_len(uint8_t *msg);
-void        init_md5(t_md5 *tmp);
 
 int         check_error(int argc, char **argv);
 

@@ -9,9 +9,6 @@ SRCS				= 	srcs/main/main.c \
 						srcs/program/end.c \
 						srcs/md5/md5.c \
 						srcs/md5/hash.c \
-						srcs/md5/fill_k.c \
-						srcs/md5/fill_r.c \
-						srcs/md5/utils.c \
 
 OBJS				= ${SRCS:.c=.o}
 

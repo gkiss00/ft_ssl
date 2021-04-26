@@ -90,10 +90,6 @@ int         main(int argc, char **argv)
     if (check_error(argc, argv) == 2)
         return (1);
     fill_data(&data, argc, argv);
-    ft_putstrendl_fd(data.type, 1);
-    ft_putstrendl_fd(data.msg, 1);
-    printf("%d %d %d %d\n", data.opts->p, data.opts->q, data.opts->r, data.opts->s);
-    ft_puttab(data.args);
     begin(&data);
     end(&data);
     return (0);
