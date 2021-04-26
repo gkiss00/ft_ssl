@@ -32,10 +32,10 @@ void        hub(t_data *data);
 void        end(t_data *data);
 
 void        ft_md5(t_data *data);
-uint8_t     *hash_md5(uint8_t *msg);
+void        hash_md5(uint8_t *msg, uint8_t *hashed);
 
 void        ft_sha256(t_data *data);
-uint8_t     *hash_sha256(uint8_t *msg);
+void        hash_sha256(uint8_t *msg, uint8_t *hashed);
 
 int         check_error(int argc, char **argv);
 

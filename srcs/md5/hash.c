@@ -81,7 +81,7 @@ static void hash_chunk(uint8_t *chunk) {
     h3 += d;
 }
 
-uint8_t     *hash_md5(uint8_t *msg)
+void        hash_md5(uint8_t *msg, uint8_t *hashed)
 {
     uint32_t len = strlen((char *)msg);
     uint32_t nb_chunk = (len / 64) + 1;
@@ -97,14 +97,11 @@ uint8_t     *hash_md5(uint8_t *msg)
         hash_chunk(&chunk[i * 64]);
     }
 
-    uint8_t *hashed = malloc(17);
     memcpy(&hashed[0], &h0, sizeof(h0));
     memcpy(&hashed[4], &h1, sizeof(h1));
     memcpy(&hashed[8], &h2, sizeof(h2));
     memcpy(&hashed[12], &h3, sizeof(h3));
-    hashed[16] = '\0';
     for (uint32_t i = 0; i < 16; ++i) {
         printf("%02x", hashed[i]);
     }
-    return hashed;
 }

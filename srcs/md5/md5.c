@@ -3,7 +3,7 @@
 void        ft_md5(t_data *data)
 {
     uint32_t    i;
-    uint8_t     *hashed;
+    uint8_t     hashed[16];
 
     i = 0;
     while(i < ft_tablen(data->args))
@@ -14,7 +14,7 @@ void        ft_md5(t_data *data)
         }
         else
         {
-            hashed = hash_md5(data->contents[i]);
+            hash_md5(data->contents[i], hashed);
         }
         ++i;
     }
