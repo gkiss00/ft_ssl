@@ -5,14 +5,15 @@ void        end(t_data *data)
     int     i;
 
     i = 0;
-    free(data->type);
-    free(data->msg);
-    while(data->args[i])
+    free(data->cmd);
+    free(data->uppercase_cmd);
+    free(data->input);
+    t_node *tmp = data->node;
+    while(tmp)
     {
-        free(data->args[i]);
-        free(data->contents[i]);
-        ++i;
+        t_node *del = tmp;
+        free(tmp->arg);
+        tmp = tmp->next;
+        free(del);
     }
-    free(data->args);
-    free(data->contents);
 }

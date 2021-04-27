@@ -101,7 +101,4 @@ void        hash_md5(uint8_t *msg, uint8_t *hashed)
     memcpy(&hashed[4], &h1, sizeof(h1));
     memcpy(&hashed[8], &h2, sizeof(h2));
     memcpy(&hashed[12], &h3, sizeof(h3));
-    for (uint32_t i = 0; i < 16; ++i) {
-        printf("%02x", hashed[i]);
-    }
 }

@@ -117,7 +117,4 @@ void        hash_sha256(uint8_t *msg, uint8_t *hashed){
     memcpy(&hashed[20], &H[5], sizeof(H[5]));
     memcpy(&hashed[24], &H[6], sizeof(H[6]));
     memcpy(&hashed[28], &H[7], sizeof(H[7]));
-    for (uint32_t i = 0; i < 32; ++i) {
-        printf("%02x", hashed[i]);
-    }
 }

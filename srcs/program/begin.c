@@ -13,6 +13,7 @@ static uint8_t  *get_content(int fd)
         buf[ret] = '\0';
         content = ft_strjoin(content, buf);
     }
+    close(fd);
     return (content);
 }
 
@@ -28,18 +29,14 @@ static uint8_t *get_fd_content(uint8_t *path)
 
 static void        fill_data_contents(t_data *data)
 {
-    uint32_t    i;
-    uint8_t     *content;
+    t_node *tmp = data->node;
 
-    i = 0;
-    data->contents = malloc(ft_tablen(data->args) + 1);
-    while(data->args && data->args[i])
-    {
-        content = get_fd_content(data->args[i]);
-        data->contents = add_to_tab(data->contents, content);
-        ++i;
+    while(tmp) {
+        if(tmp->type == FILE) {
+            tmp->arg = get_fd_content(tmp->file_name);
+        }
+        tmp = tmp->next;
     }
-    data->contents[i] = NULL;
 }
 
 void        begin(t_data *data)

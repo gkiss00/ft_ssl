@@ -66,3 +66,14 @@ uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2)
     free(s1);
     return (str);
 }
+
+char *to_upper(char * temp) {
+    char *name = malloc(strlen(temp));
+	int	i = 0;
+
+    while (temp[i]) {
+		name[i] = toupper((unsigned char) temp[i]);
+        ++i;
+    }
+	return name;
+}
