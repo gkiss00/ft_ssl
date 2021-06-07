@@ -4,6 +4,10 @@ t_node *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name) {
     t_node *node;
 
     node = malloc(sizeof(t_node));
+    if(node == NULL) {
+        printf("Malloc error");
+        exit(EXIT_FAILURE);
+    }
     node->type = type;
     node->arg = arg ? (uint8_t*)strdup((char*)arg): NULL;
     node->file_name = file_name ? (uint8_t*)strdup((char*)file_name): NULL;

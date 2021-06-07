@@ -69,6 +69,10 @@ uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2)
 
 char *to_upper(char * temp) {
     char *name = malloc(strlen(temp));
+    if(name == NULL) {
+        printf("Malloc error");
+        exit(EXIT_FAILURE);
+    }
 	int	i = 0;
 
     while (temp[i]) {
