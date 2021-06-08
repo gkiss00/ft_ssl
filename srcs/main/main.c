@@ -23,18 +23,6 @@ static void fill_data(t_data *data, char **argv)
         get_stdin_input(data);
 }
 
-// static void init_command(t_command *commands) {
-//     commands[0].name = "md5";
-//     commands[0].uppercase_name = "MD5";
-//     commands[0].hash = *hash_md5;
-//     commands[0].nb_bytes = 16;
-
-//     commands[1].name = "sha256";
-//     commands[1].uppercase_name = "SHA256";
-//     commands[1].hash = *hash_sha256;
-//     commands[1].nb_bytes = 32;
-// }
-
 static void init_data(t_data *data, t_option *options)
 {
     data->opts = options;
@@ -52,7 +40,6 @@ int         main(int argc, char **argv)
 {
     t_data      data;
     t_option    options;
-    //t_command   commands[NB_COMMAND];
     
     init_data(&data, &options);
     check_error(argc, argv);

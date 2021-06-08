@@ -11,6 +11,8 @@ SRCS				= 	srcs/main/main.c \
 						srcs/md5/hash.c \
 						srcs/sha256/sha256.c \
 						srcs/sha256/hash.c \
+						srcs/base64/encrypt.c \
+						srcs/base64/decrypt.c \
 
 OBJS				= ${SRCS:.c=.o}
 

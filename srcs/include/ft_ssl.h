@@ -62,6 +62,9 @@ void        hash_md5(uint8_t *msg, uint8_t *hashed);
 void        ft_sha256(t_data *data);
 void        hash_sha256(uint8_t *msg, uint8_t *hashed);
 
+uint8_t *encrypt_base64(uint8_t *msg);
+uint8_t *decrypt_base64(uint8_t *msg);
+
 //ERROR
 void     check_error(int argc, char **argv);
 

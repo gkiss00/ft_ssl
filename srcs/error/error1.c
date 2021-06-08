@@ -10,7 +10,6 @@ static void print_usage_error(char **argv)
     printf("ft_ssl: Error: %s is an invalid command\n", argv[1]);
     printf("Standard commands:\n");
     printf("Message Digest commands:\n");
-    printf("Message Digest commands:\n");
     printf("\t- md5\n");
     printf("\t- sha256\n");
     printf("Cipher commands:\n");
