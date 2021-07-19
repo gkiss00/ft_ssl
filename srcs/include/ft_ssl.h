@@ -16,22 +16,6 @@
 #define FILE 2
 #define NB_COMMAND 2
 
-typedef struct          s_node
-{
-    uint32_t             type;
-    uint8_t              *arg;
-    uint8_t              *file_name;
-    struct s_node         *next;
-}                       t_node;
-
-typedef struct          s_command
-{
-    uint8_t              *name;
-    uint8_t              *uppercase_name;
-    void                (*hash)(uint8_t *msg, uint8_t *hashed);
-    uint32_t            nb_bytes;
-}                       t_command;
-
 typedef struct          s_option
 {
     uint32_t             p;
@@ -39,6 +23,14 @@ typedef struct          s_option
     uint32_t             r;
     uint32_t             s;
 }                       t_option;
+
+typedef struct          s_node
+{
+    uint32_t             type;
+    uint8_t              *arg;
+    uint8_t              *file_name;
+    struct s_node         *next;
+}                       t_node;
 
 typedef struct		    s_data
 {
@@ -48,6 +40,14 @@ typedef struct		    s_data
     struct s_node       *node;
     struct s_option     *opts;
 }                       t_data;
+
+typedef struct          s_command
+{
+    uint8_t              *name;
+    void                (*hash)(t_data *data);
+    uint32_t            nb_bytes;
+    struct s_command    *next;
+}                       t_command;
 
 //PROGRAM
 void        begin(t_data *data);
@@ -90,6 +90,10 @@ uint32_t right_rotate_32(uint32_t value, unsigned int count);
 t_node *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name);
 t_node *node_last(t_node *node);
 void node_add_back(t_node **head, t_node *new);
+
+t_command *new_command(uint8_t *name, void (*hash)(t_data*));
+t_command *command_last(t_command *command);
+void command_add_back(t_command **head, t_command *new);
 
 
 

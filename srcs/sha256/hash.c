@@ -23,7 +23,7 @@ uint32_t    H[8];
 
 static void preprocessing(uint8_t *msg, uint8_t *chunk) {
     uint32_t len = strlen((char*)msg);
-    uint32_t nb_chunk = (len / 64) + 1;
+    uint32_t nb_chunk = (len / 64) + 1 + ((len % 64) >= 56 ? 1 : 0);
     uint64_t size = small_to_big_endian_64(len * 8);
 
     memset(chunk, 0, nb_chunk * 64);
@@ -87,7 +87,7 @@ static void hash_chunk(uint8_t *chunk) {
 
 void        hash_sha256(uint8_t *msg, uint8_t *hashed){
     uint32_t len = strlen((char*)msg);
-    uint32_t nb_chunk = (len / 64) + 1;
+    uint32_t nb_chunk = (len / 64) + 1 + ((len % 64) >= 56 ? 1 : 0);
     uint8_t chunk[nb_chunk * 64];
 
     preprocessing(msg, chunk);
