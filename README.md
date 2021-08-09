@@ -1,6 +1,6 @@
 # ft_ssl
 
-* Recode the ssl md5 and sha256 algorithm
+* Recode the ssl md5 and sha256 algorithms
 
 ## Options
 
