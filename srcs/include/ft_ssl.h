@@ -14,7 +14,15 @@
 
 #define STRING 1
 #define FILE 2
-#define NB_COMMAND 2
+
+#define BIT(n, k) (n >> k) & 1
+#define CIRCULAR_SHIFT_28(n, k) ((n << k + 4) >> 4) | (n >> (28 - k))
+
+#define PRINT_UINT56(n) print_uint8(*((uint8_t *)&n)), printf(" "), print_uint8(*((uint8_t *)&n + 1)), printf(" "), print_uint8(*((uint8_t *)&n + 2)), printf(" "), print_uint8(*((uint8_t *)&n + 3)), printf(" "), print_uint8(*((uint8_t *)&n + 4)), printf(" "), print_uint8(*((uint8_t *)&n + 5)), printf(" "), print_uint8(*((uint8_t *)&n + 6))
+#define PRINT_UINT48(n) print_uint8(*((uint8_t *)&n)), printf(" "), print_uint8(*((uint8_t *)&n + 1)), printf(" "), print_uint8(*((uint8_t *)&n + 2)), printf(" "), print_uint8(*((uint8_t *)&n + 3)), printf(" "), print_uint8(*((uint8_t *)&n + 4)), printf(" "), print_uint8(*((uint8_t *)&n + 5))
+
+#define X(n) (n >> 1) & 15
+#define Y(n) (n & 33) == 0 ? 0 : (n & 33) == 1 ? 1 : (n & 33) == 32 ? 2 : 3
 
 typedef struct              s_option_digest
 {
@@ -91,6 +99,9 @@ void        ft_base64(int argc, char **argv, t_data *data);
 uint8_t     *encrypt_base64(uint8_t *msg);
 uint8_t     *decrypt_base64(uint8_t *msg);
 
+// DES
+void        ft_des(int argc, char **argv, t_data *data);
+
 // ERROR
 void        check_error(int argc);
 void        check_error_base64(int argc, char **argv);
@@ -104,13 +115,17 @@ uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2);
 uint8_t     *first_line(uint8_t *temp);
 
 char        *to_upper(char * temp);
-
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
+
+void print_uint8(uint8_t n);
+void print_uint32(uint32_t n);
+void print_uint64(uint64_t n);
 
 // PARSING
 void        get_stdin_input(t_data *data);
 void        parsing_digest(int argc, char **argv, t_data *data);
 void        parsing_base64(int argc, char **argv, t_data *data);
+void        parsing_cipher(int argc, char **argv, t_data *data);
 
 // BIT OPERAND
 uint64_t    small_to_big_endian_64(uint64_t n);
