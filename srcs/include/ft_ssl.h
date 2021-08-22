@@ -58,6 +58,7 @@ typedef struct		        s_data
 	uint8_t                 *cmd;
     uint8_t                 *uppercase_cmd;
     uint8_t                 *input;
+    uint8_t                 *output_file;
     struct s_node           *node;
     struct s_option_digest  *opts_digest;
     struct s_option_base64  *opts_base64;
@@ -86,6 +87,7 @@ void        ft_sha256(int argc, char **argv, t_data *data);
 void        hash_sha256(uint8_t *msg, uint8_t *hashed);
 
 // BASE64
+void        ft_base64(int argc, char **argv, t_data *data);
 uint8_t     *encrypt_base64(uint8_t *msg);
 uint8_t     *decrypt_base64(uint8_t *msg);
 
@@ -99,6 +101,7 @@ uint32_t    ft_strlen(uint8_t *str);
 uint32_t    ft_strcmp(uint8_t *s1, uint8_t *s2);
 uint8_t     *ft_strdup(uint8_t *s1);
 uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2);
+uint8_t     *first_line(uint8_t *temp);
 
 char        *to_upper(char * temp);
 
@@ -107,6 +110,7 @@ uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 // PARSING
 void        get_stdin_input(t_data *data);
 void        parsing_digest(int argc, char **argv, t_data *data);
+void        parsing_base64(int argc, char **argv, t_data *data);
 
 // BIT OPERAND
 uint64_t    small_to_big_endian_64(uint64_t n);

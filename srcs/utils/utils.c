@@ -81,3 +81,18 @@ char *to_upper(char * temp) {
     }
 	return name;
 }
+
+uint8_t *first_line(uint8_t *temp) {
+    uint32_t size = ft_strlen(temp);
+    for (uint32_t i = 0; i < ft_strlen(temp); ++i) {
+        if(temp[i] == '\n') {
+            size = i;
+            break;
+        }
+    }
+
+    uint8_t *line = malloc(size + 1);
+    memset(line, 0, size + 1);
+    memcpy(line, temp, size);
+	return line;
+}

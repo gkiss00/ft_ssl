@@ -18,6 +18,7 @@ static void init_data(
     data->cmd = NULL;
     data->uppercase_cmd = NULL;
     data->input = NULL;
+    data->output_file = NULL;
     data->node = NULL;
 
     data->opts_digest->p = 0;

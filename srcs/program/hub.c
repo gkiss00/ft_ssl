@@ -3,6 +3,7 @@
 t_command   *init_cmd(){
     t_command *cmd = new_command((uint8_t*)"md5", &ft_md5);
     command_add_back(&cmd, new_command((uint8_t*)"sha256", &ft_sha256));
+    command_add_back(&cmd, new_command((uint8_t*)"base64", &ft_base64));
 
     return cmd;
 }

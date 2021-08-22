@@ -90,6 +90,5 @@ uint8_t *encrypt_base64(uint8_t *msg) {
                 break;
         }
     }
-    printf("new_msg: %s\n", (char *)new_msg);
     return (new_msg);
 }
