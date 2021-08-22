@@ -2,7 +2,6 @@ SRCS				= 	srcs/main/main.c \
 						srcs/utils/utils.c \
 						srcs/utils/opperand.c \
 						srcs/error/error.c \
-						srcs/error/error.digest.c \
 						srcs/error/error.base64.c \
 						srcs/program/begin.c \
 						srcs/program/hub.c \

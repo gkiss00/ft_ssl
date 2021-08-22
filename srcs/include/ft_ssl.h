@@ -18,18 +18,18 @@
 
 typedef struct              s_option_digest
 {
-    uint32_t                p;
-    uint32_t                q;
-    uint32_t                r;
-    uint32_t                s;
+    uint32_t                p; // stdin
+    uint32_t                q; // quiet
+    uint32_t                r; // reverse
+    uint32_t                s; // string
 }                           t_option_digest;
 
 typedef struct              s_option_base64
 {
-    uint32_t                d;
-    uint32_t                e;
-    uint32_t                i;
-    uint32_t                o;
+    uint32_t                d; // decrypt
+    uint32_t                e; // encrypt (default)
+    uint32_t                i; // input file
+    uint32_t                o; // output file
 }                           t_option_base64;
 
 typedef struct              s_option_cipher
@@ -86,12 +86,11 @@ void        ft_sha256(int argc, char **argv, t_data *data);
 void        hash_sha256(uint8_t *msg, uint8_t *hashed);
 
 // BASE64
-uint8_t *encrypt_base64(uint8_t *msg);
-uint8_t *decrypt_base64(uint8_t *msg);
+uint8_t     *encrypt_base64(uint8_t *msg);
+uint8_t     *decrypt_base64(uint8_t *msg);
 
 // ERROR
 void        check_error(int argc);
-void        check_error_digest(char **argv);
 void        check_error_base64(int argc, char **argv);
 void        print_usage_error(char **argv);
 
@@ -106,23 +105,23 @@ char        *to_upper(char * temp);
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 
 // PARSING
-void get_stdin_input(t_data *data);
-void    parsing_digest(int argc, char **argv, t_data *data);
+void        get_stdin_input(t_data *data);
+void        parsing_digest(int argc, char **argv, t_data *data);
 
 // BIT OPERAND
-uint64_t small_to_big_endian_64(uint64_t n);
-uint32_t big_to_small_endian_32(uint32_t n);
-uint32_t left_rotate_32(uint32_t value, unsigned int count);
-uint32_t right_rotate_32(uint32_t value, unsigned int count);
+uint64_t    small_to_big_endian_64(uint64_t n);
+uint32_t    big_to_small_endian_32(uint32_t n);
+uint32_t    left_rotate_32(uint32_t value, unsigned int count);
+uint32_t    right_rotate_32(uint32_t value, unsigned int count);
 
 // NODE
-t_node *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name);
-t_node *node_last(t_node *node);
-void node_add_back(t_node **head, t_node *new);
+t_node      *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name);
+t_node      *node_last(t_node *node);
+void        node_add_back(t_node **head, t_node *new);
 
-t_command *new_command(uint8_t *name, void (*hash)(int, char**, t_data*));
-t_command *command_last(t_command *command);
-void command_add_back(t_command **head, t_command *new);
+t_command   *new_command(uint8_t *name, void (*hash)(int, char**, t_data*));
+t_command   *command_last(t_command *command);
+void        command_add_back(t_command **head, t_command *new);
 
 
 
