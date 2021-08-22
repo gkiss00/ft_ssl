@@ -51,7 +51,7 @@ int         main(int argc, char **argv)
     init_data(&data, &options_digest, &options_base64, &options_cipher);
     check_error(argc);
     getCmd(&data, (uint8_t**)argv);
-    begin(argc, argv, &data);
+    hub(argc, argv, &data);
     end(&data);
     exit(EXIT_SUCCESS);
 }

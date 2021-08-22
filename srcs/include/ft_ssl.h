@@ -73,7 +73,7 @@ typedef struct              s_command
 }                           t_command;
 
 // PROGRAM
-void        begin(int argc, char **argv, t_data *data);
+void        fill_data_contents(t_data *data);
 void        hub(int argc, char **argv, t_data *data);
 void        end(t_data *data);
 
@@ -106,7 +106,6 @@ char        *to_upper(char * temp);
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 
 // PARSING
-//void    parsing(t_data *data, uint8_t **argv);
 void get_stdin_input(t_data *data);
 void    parsing_digest(int argc, char **argv, t_data *data);
 

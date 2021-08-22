@@ -14,6 +14,8 @@ static uint8_t  *get_content(int fd)
         content = ft_strjoin(content, buf);
     }
     close(fd);
+    if(content == NULL)
+        return (uint8_t*)ft_strdup((uint8_t*)"");
     return (content);
 }
 
@@ -27,7 +29,7 @@ static uint8_t *get_fd_content(uint8_t *path)
     return (get_content(fd));
 }
 
-static void        fill_data_contents(t_data *data)
+void        fill_data_contents(t_data *data)
 {
     t_node *tmp = data->node;
 
@@ -37,10 +39,4 @@ static void        fill_data_contents(t_data *data)
         }
         tmp = tmp->next;
     }
-}
-
-void        begin(int argc, char **argv, t_data *data)
-{
-    fill_data_contents(data);
-    hub(argc, argv, data);
 }

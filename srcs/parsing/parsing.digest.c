@@ -34,6 +34,6 @@ void    parsing_digest(int argc, char **argv, t_data *data) {
         }
     }
     for (i = optind + 1; i < argc; i++){
-        addArg(data, STRING, NULL, (uint8_t *)argv[i]);
+        addArg(data, FILE, NULL, (uint8_t *)argv[i]);
     }
 }
