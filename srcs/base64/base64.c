@@ -1,16 +1,12 @@
 #include "./../include/ft_ssl.h"
 
-extern char *ALPHA;
-
 static void check_stream(uint8_t *msg) {
-    printf("oui\n");
     for (uint32_t i = 0; i < ft_strlen(msg); ++i) {
         if(strchr("QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789+/", msg[i]) == NULL && msg[i] != '='){
             fprintf(stderr, "Invalid character in input stream.");
             exit(EXIT_FAILURE);
         }
     }
-    printf("non\n");
 }
 
 static void ft_decrypt(t_data *data) {
