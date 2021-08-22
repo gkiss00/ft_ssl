@@ -7,14 +7,16 @@ t_command   *init_cmd(){
     return cmd;
 }
 
-void        hub(t_data *data)
+void        hub(int argc, char **argv, t_data *data)
 {
     t_command *cmd = init_cmd();
     while(cmd) {
         if (ft_strcmp(data->cmd, cmd->name) == 0){
-            cmd->hash(data);
+            cmd->hash(argc, argv, data);
             break;
         }
         cmd = cmd->next;
     }
+    if(cmd == NULL)
+        print_usage_error(argv);
 }

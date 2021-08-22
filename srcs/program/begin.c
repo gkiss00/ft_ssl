@@ -39,8 +39,8 @@ static void        fill_data_contents(t_data *data)
     }
 }
 
-void        begin(t_data *data)
+void        begin(int argc, char **argv, t_data *data)
 {
     fill_data_contents(data);
-    hub(data);
+    hub(argc, argv, data);
 }

@@ -11,10 +11,10 @@ static void output_hash(uint8_t *hashed, uint32_t size) {
 }
 
 static void output_normal(t_data *data, uint8_t *hashed, t_node *node) {
-    if (data->opts->q == 1) {
+    if (data->opts_digest->q == 1) {
         output_hash(hashed, 16);    
     } else {
-        if (data->opts->r == 0) {
+        if (data->opts_digest->r == 0) {
             if(node->type == STRING) {
                 printf("%s (\"%s\") = ", data->uppercase_cmd, node->arg);
             } else if (node->type == FILE) {
@@ -45,7 +45,7 @@ static void output(t_data *data, uint8_t *hashed, t_node *node) {
 static void output_input(t_data *data) {
     uint8_t     hashed[16];
     if(data->input) {
-        if (data->opts->p) {
+        if (data->opts_digest->p) {
             printf("%s", data->input);
         }
         hash_md5(data->input, hashed);
@@ -54,11 +54,15 @@ static void output_input(t_data *data) {
     }
 }
 
-void        ft_md5(t_data *data)
+void        ft_md5(int argc, char **argv, t_data *data)
 {
     uint8_t     hashed[16];
-    t_node *tmp = data->node;
+    t_node *tmp;
 
+    parsing_digest(argc, argv, data);
+    if (data->opts_digest->p == 1 || data->node == NULL)
+        get_stdin_input(data);
+    tmp = data->node;
     output_input(data);
     while(tmp) {
         if(tmp->arg)

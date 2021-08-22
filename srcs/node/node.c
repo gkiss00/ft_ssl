@@ -36,7 +36,7 @@ void node_add_back(t_node **head, t_node *new) {
 	}
 }
 
-t_command *new_command(uint8_t *name, void (*hash)(t_data*)) {
+t_command *new_command(uint8_t *name, void (*hash)(int, char**, t_data*)) {
     t_command *command;
 
     command = malloc(sizeof(t_command));

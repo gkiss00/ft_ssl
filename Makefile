@@ -1,12 +1,15 @@
 SRCS				= 	srcs/main/main.c \
 						srcs/utils/utils.c \
 						srcs/utils/opperand.c \
-						srcs/error/error1.c \
+						srcs/error/error.c \
+						srcs/error/error.digest.c \
+						srcs/error/error.base64.c \
 						srcs/program/begin.c \
 						srcs/program/hub.c \
 						srcs/program/end.c \
 						srcs/node/node.c \
 						srcs/parsing/parsing.c \
+						srcs/parsing/parsing.digest.c \
 						srcs/md5/md5.c \
 						srcs/md5/hash.c \
 						srcs/sha256/sha256.c \
