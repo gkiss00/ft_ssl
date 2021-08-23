@@ -33,6 +33,17 @@ static int block_permutation_table[64] = {
     63, 55, 47, 39, 31, 23, 15, 7 
 };
 
+static int block_final_permutation_table[64] = {
+    40, 8, 48, 16, 56, 24, 64, 32,
+    39, 7, 47, 15, 55, 23, 63, 31,
+    38, 6, 46, 14, 54, 22, 62, 30,
+    37, 5, 45, 13, 53, 21, 61, 29,
+    36, 4, 44, 12, 52, 20, 60, 28,
+    35, 3, 43, 11, 51, 19, 59, 27,
+    34, 2, 42, 10, 50, 18, 58, 26,
+    33, 1, 41,  9, 49, 17, 57, 25
+};
+
 static int e_bit_table[48] = {
     32, 1, 2, 3, 4, 5,
      4, 5, 6, 7, 8, 9,
@@ -180,7 +191,7 @@ static void rotate_key(uint8_t key[7], int shift) {
 }
 
 // permutate block from 64 to 64
-static void permutate_block_64_to_64(uint8_t *block) {
+static void permutate_block_64_to_64(uint8_t *block, int table[64]) {
     uint8_t permutated_block[8];
 
     memset(permutated_block, 0, 8); // set memory to 0
@@ -189,7 +200,7 @@ static void permutate_block_64_to_64(uint8_t *block) {
         for (int k = 0; k < 8; ++k) // for each bits
         {
             int l = 8*j + k; // get the current index
-            int shift = block_permutation_table[l] - 1; // get the shift
+            int shift = table[l] - 1; // get the shift
             int bit = (block[shift / 8] >> (7 - shift%8)) & 1; // set the bit to 0 or 1
             permutated_block[j] |= bit << (7 - k); // add to new value
         }
@@ -352,7 +363,7 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
         PRINT_UINT64(block);
         puts("");
 
-        permutate_block_64_to_64(block);
+        permutate_block_64_to_64(block, block_permutation_table);
 
         printf("block permuted %d: ", i);
         PRINT_UINT64(block);
@@ -377,6 +388,11 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
             PRINT_UINT32(res);
             puts("");
         }
+        uint8_t final_block[8];
+        memcpy(&final_block[0], &right_32[15], 4);
+        memcpy(&final_block[4], &left_32[15], 4);
+        permutate_block_64_to_64(block, block_final_permutation_table);
+        memcpy(&msg[i * 8], final_block, 8);
     }
 }
 
