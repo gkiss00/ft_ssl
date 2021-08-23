@@ -18,11 +18,19 @@
 #define BIT(n, k) (n >> k) & 1
 #define CIRCULAR_SHIFT_28(n, k) ((n << k + 4) >> 4) | (n >> (28 - k))
 
-#define PRINT_UINT56(n) print_uint8(*((uint8_t *)&n)), printf(" "), print_uint8(*((uint8_t *)&n + 1)), printf(" "), print_uint8(*((uint8_t *)&n + 2)), printf(" "), print_uint8(*((uint8_t *)&n + 3)), printf(" "), print_uint8(*((uint8_t *)&n + 4)), printf(" "), print_uint8(*((uint8_t *)&n + 5)), printf(" "), print_uint8(*((uint8_t *)&n + 6))
-#define PRINT_UINT48(n) print_uint8(*((uint8_t *)&n)), printf(" "), print_uint8(*((uint8_t *)&n + 1)), printf(" "), print_uint8(*((uint8_t *)&n + 2)), printf(" "), print_uint8(*((uint8_t *)&n + 3)), printf(" "), print_uint8(*((uint8_t *)&n + 4)), printf(" "), print_uint8(*((uint8_t *)&n + 5))
+#define PRINT_UINT64(n) print_uint8(&((uint8_t *)n)[0]), printf(" "), print_uint8(&((uint8_t *)n)[1]), printf(" "), print_uint8(&((uint8_t *)n)[2]), printf(" "), print_uint8(&((uint8_t *)n)[3]), printf(" "), print_uint8(&((uint8_t *)n)[4]), printf(" "), print_uint8(&((uint8_t *)n)[5]), printf(" "), print_uint8(&((uint8_t *)n)[6]), printf(" "), print_uint8(&((uint8_t *)n)[7])
+#define PRINT_UINT56(n) print_uint8(&((uint8_t *)n)[0]), printf(" "), print_uint8(&((uint8_t *)n)[1]), printf(" "), print_uint8(&((uint8_t *)n)[2]), printf(" "), print_uint8(&((uint8_t *)n)[3]), printf(" "), print_uint8(&((uint8_t *)n)[4]), printf(" "), print_uint8(&((uint8_t *)n)[5]), printf(" "), print_uint8(&((uint8_t *)n)[6])
+#define PRINT_UINT48(n) print_uint8(&((uint8_t *)n)[0]), printf(" "), print_uint8(&((uint8_t *)n)[1]), printf(" "), print_uint8(&((uint8_t *)n)[2]), printf(" "), print_uint8(&((uint8_t *)n)[3]), printf(" "), print_uint8(&((uint8_t *)n)[4]), printf(" "), print_uint8(&((uint8_t *)n)[5]), printf(" ")
+#define PRINT_UINT40(n) print_uint8(&((uint8_t *)n)[0]), printf(" "), print_uint8(&((uint8_t *)n)[1]), printf(" "), print_uint8(&((uint8_t *)n)[2]), printf(" "), print_uint8(&((uint8_t *)n)[3]), printf(" "), print_uint8(&((uint8_t *)n)[4])
+#define PRINT_UINT32(n) print_uint8(&((uint8_t *)n)[0]), printf(" "), print_uint8(&((uint8_t *)n)[1]), printf(" "), print_uint8(&((uint8_t *)n)[2]), printf(" "), print_uint8(&((uint8_t *)n)[3])
+#define PRINT_UINT24(n) print_uint8(&((uint8_t *)n)[0]), printf(" "), print_uint8(&((uint8_t *)n)[1]), printf(" "), print_uint8(&((uint8_t *)n)[2])
+#define PRINT_UINT16(n) print_uint8(&((uint8_t *)n)[0]), printf(" "), print_uint8(&((uint8_t *)n)[1])
+#define PRINT_UINT8(n) print_uint8(&((uint8_t *)n)[0])
 
 #define X(n) (n >> 1) & 15
 #define Y(n) (n & 33) == 0 ? 0 : (n & 33) == 1 ? 1 : (n & 33) == 32 ? 2 : 3
+
+#define XOR(n, k) (n ^ k)
 
 typedef struct              s_option_digest
 {
@@ -117,9 +125,9 @@ uint8_t     *first_line(uint8_t *temp);
 char        *to_upper(char * temp);
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 
-void print_uint8(uint8_t n);
-void print_uint32(uint32_t n);
-void print_uint64(uint64_t n);
+void print_uint8(uint8_t *n);
+// void print_uint32(uint32_t n);
+// void print_uint64(uint64_t n);
 
 // PARSING
 void        get_stdin_input(t_data *data);

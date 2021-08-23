@@ -111,15 +111,16 @@ static int pow(int b, int e)
     return (ret);
 }
 
-void print_uint8(uint8_t n)
+void print_uint8(uint8_t *n)
 {
+    int t = *n;
     for (int i = 0; i < 8; ++i)
     {
         // printf("n = %u [%u]\n", n, pow(2, 7 - i));
-        if (n / pow(2, 7 - i) >= 1) // power for integers -> https://stackoverflow.com/questions/29787310/does-pow-work-for-int-data-type-in-c
+        if (t / pow(2, 7 - i) >= 1) // power for integers -> https://stackoverflow.com/questions/29787310/does-pow-work-for-int-data-type-in-c
         {
             putchar('1');
-            n -= pow(2, 7 - i);
+            t -= pow(2, 7 - i);
         }
         else
         {
@@ -128,24 +129,24 @@ void print_uint8(uint8_t n)
     }
 }
 
-void print_uint32(uint32_t n)
-{
-    uint8_t *t = (uint8_t *)&n;
+// void print_uint32(uint32_t n)
+// {
+//     uint8_t *t = (uint8_t *)&n;
 
-    for (int i = 0; i < 4; ++i)
-    {
-        print_uint8(t[i]);
-        printf(" ");
-    }
-}
+//     for (int i = 0; i < 4; ++i)
+//     {
+//         print_uint8(t[i]);
+//         printf(" ");
+//     }
+// }
 
-void print_uint64(uint64_t n)
-{
-    uint8_t *t = (uint8_t *)&n;
+// void print_uint64(uint64_t n)
+// {
+//     uint8_t *t = (uint8_t *)&n;
 
-    for (int i = 0; i < 8; ++i)
-    {
-        print_uint8(t[i]);
-        printf(" ");
-    }
-}
+//     for (int i = 0; i < 8; ++i)
+//     {
+//         print_uint8(t[i]);
+//         printf(" ");
+//     }
+// }
