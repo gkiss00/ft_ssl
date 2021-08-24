@@ -15,7 +15,7 @@ uint32_t    ft_strcmp(uint8_t *s1, uint8_t *s2)
     uint32_t    i;
 
     i = 0;
-    while(s1[i] && s2[i])
+    while(s1 && s2 && s1[i] && s2[i])
     {
         if (s1[i] != s2[i])
             return (s1[i] - s2[i]);
