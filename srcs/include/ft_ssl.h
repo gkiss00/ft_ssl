@@ -45,8 +45,6 @@ typedef struct              s_option_base64
 {
     uint32_t                d; // decrypt
     uint32_t                e; // encrypt (default)
-    uint32_t                i; // input file
-    uint32_t                o; // output file
 }                           t_option_base64;
 
 typedef struct              s_option_cipher
@@ -54,16 +52,10 @@ typedef struct              s_option_cipher
     uint32_t                a; // decrypt/encrypt
     uint32_t                d; // decrypt mode
     uint32_t                e; // encrypt mode
-    uint32_t                i; // input file
-    uint32_t                o; // output file
-    uint32_t                k; // key hexadecimal
-    uint32_t                p; // password
-    uint32_t                s; // salt hexadecimal
-    uint32_t                v; // vector hexadecimal
-    uint8_t                 *vector;
-    uint8_t                 *salt;
-    uint8_t                 *password;
-    uint8_t                 *key;
+    uint8_t                 *vector; // vector hexadecimal
+    uint8_t                 *salt; // salt hexadecimal
+    uint8_t                 *password; // password
+    uint8_t                 *key; // key hexadecimal
 }                           t_option_cipher;
 
 typedef struct              s_node
@@ -126,9 +118,9 @@ uint32_t    ft_strcmp(uint8_t *s1, uint8_t *s2);
 uint8_t     *ft_strdup(uint8_t *s1);
 uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2);
 uint8_t     *first_line(uint8_t *temp);
-
 char        *to_upper(char * temp);
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
+uint8_t     *str_to_hex(uint8_t str[16]);
 
 void print_uint8(uint8_t *n);
 // void print_uint32(uint32_t n);

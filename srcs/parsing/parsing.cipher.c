@@ -1,5 +1,18 @@
 #include "./../include/ft_ssl.h"
 
+static void print_usage() {
+    printf("des des-ecb des-cbc: usage:\n");
+    printf("\t-a encrypt/decrypt\n");
+    printf("\t-d decrypt\n");
+    printf("\t-e encrypt\n");
+    printf("\t-i <file> input\n");
+    printf("\t-o <file> output\n");
+    printf("\t-v <hex> vector\n");
+    printf("\t-s <hex> salt\n");
+    printf("\t-p <str> password\n");
+    printf("\t-k <hex> key\n");
+}
+
 static void addArg(t_data *data, uint32_t type, uint8_t *arg, uint8_t *file_name) {
     t_node *node = new_node(type, arg, file_name);
     node_add_back(&data->node, node);
@@ -35,27 +48,51 @@ static void pre_process(t_data *data){
         data->opts_cipher->salt = calloc(8, 1);
         memcpy(&r, data->opts_cipher->salt, 8);
     } else {
-        uint8_t *tmp = calloc(8, 1);
-        memcpy(tmp, data->opts_cipher->salt, 8);
+        uint8_t *tmp = calloc(16, 1);
+        memset(tmp, '0', 16);
+        memcpy(tmp, data->opts_cipher->salt, ft_strlen(data->opts_cipher->salt) > 16 ? 16 : ft_strlen(data->opts_cipher->salt));
+        uint8_t *hex = str_to_hex(tmp);
+        free(tmp);
         free(data->opts_cipher->salt);
-        long int hex = strtol((char*)tmp, NULL, 16);
-        memcpy(data->opts_cipher->salt, &hex, 8);
+        data->opts_cipher->salt = hex;
+        if(hex == NULL){
+            printf("non-hex digit\ninvalid hex salt value\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
     // key
     if(data->opts_cipher->key == NULL) {
         //generate from pass and salt
     } else {
-        uint32_t size = ft_strlen(data->opts_cipher->key);
-        uint8_t *tmp = calloc(8, 1);
-        if(size < 8) {
-            memcpy(tmp, data->opts_cipher->key, size);
-        } else if (size > 8) {
-            memcpy(tmp, data->opts_cipher->key, 8);
-        }
+        uint8_t *tmp = calloc(16, 1);
+        memset(tmp, '0', 16);
+        memcpy(tmp, data->opts_cipher->key, ft_strlen(data->opts_cipher->key) > 16 ? 16 : ft_strlen(data->opts_cipher->key));
+        uint8_t *hex = str_to_hex(tmp);
+        free(tmp);
         free(data->opts_cipher->key);
-        long int hex = strtol((char*)tmp, NULL, 16);
-        memcpy(data->opts_cipher->key, &hex, 8);
+        data->opts_cipher->key = hex;
+        if(hex == NULL){
+            printf("non-hex digit\ninvalid hex key value\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // vector
+    if(data->opts_cipher->vector == NULL) {
+        //generate from pass and salt
+    } else {
+        uint8_t *tmp = calloc(16, 1);
+        memset(tmp, '0', 16);
+        memcpy(tmp, data->opts_cipher->vector, (int)ft_strlen(data->opts_cipher->vector) > 16 ? 16 : ft_strlen(data->opts_cipher->vector));
+        uint8_t *hex = str_to_hex(tmp);
+        free(tmp);
+        free(data->opts_cipher->vector);
+        data->opts_cipher->vector = hex;
+        if(hex == NULL){
+            printf("non-hex digit\ninvalid hex vector value\n");
+            exit(EXIT_FAILURE);
+        }
     }
 }
 
@@ -76,30 +113,25 @@ void    parsing_cipher(int argc, char **argv, t_data *data) {
                 data->opts_cipher->e = 1;
                 break;
             case 'i':
-                data->opts_cipher->i = 1;
                 addArg(data, FILE, NULL, (uint8_t*)optarg);
                 break;
             case 'o':
-                data->opts_cipher->o = 1;
                 data->output_file = ft_strdup((uint8_t*)optarg);
                 break;
             case 'k':
-                data->opts_cipher->k = 1;
                 data->opts_cipher->key = ft_strdup((uint8_t*)optarg);
                 break;
             case 'p':
-                data->opts_cipher->p = 1;
                 data->opts_cipher->password = ft_strdup((uint8_t*)optarg);
                 break;
             case 's':
-                data->opts_cipher->s = 1;
                 data->opts_cipher->salt = ft_strdup((uint8_t*)optarg);
                 break;
             case 'v':
-                data->opts_cipher->v = 1;
                 data->opts_cipher->vector = ft_strdup((uint8_t*)optarg);
                 break;
             case '?':
+                print_usage();
                 exit(EXIT_FAILURE);
                 break;
             default:

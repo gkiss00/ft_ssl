@@ -1,5 +1,13 @@
 #include "./../include/ft_ssl.h"
 
+static void print_usage() {
+    printf("base64: usage:\n");
+    printf("\t-d decrypt\n");
+    printf("\t-e encrypt\n");
+    printf("\t-i <file> input\n");
+    printf("\t-o <file> output\n");
+}
+
 static void addArg(t_data *data, uint32_t type, uint8_t *arg, uint8_t *file_name) {
     t_node *node = new_node(type, arg, file_name);
     node_add_back(&data->node, node);
@@ -24,6 +32,7 @@ void    parsing_base64(int argc, char **argv, t_data *data) {
                 data->output_file = (uint8_t*)optarg;
                 break;
             case '?':
+                print_usage();
                 exit(EXIT_FAILURE);
                 break;
             default:

@@ -9,8 +9,8 @@ static void init_data(
     t_data *data, 
     t_option_digest *options_digest, 
     t_option_base64 *options_base64, 
-    t_option_cipher *options_cipher)
-{
+    t_option_cipher *options_cipher
+) {
     data->opts_digest = options_digest;
     data->opts_base64 = options_base64;
     data->opts_cipher = options_cipher;
@@ -28,18 +28,10 @@ static void init_data(
 
     data->opts_base64->d = 0;
     data->opts_base64->e = 0;
-    data->opts_base64->i = 0;
-    data->opts_base64->o = 0;
 
     data->opts_cipher->a = 0;
     data->opts_cipher->d = 0;
     data->opts_cipher->e = 0;
-    data->opts_cipher->i = 0;
-    data->opts_cipher->o = 0;
-    data->opts_cipher->k = 0;
-    data->opts_cipher->p = 0;
-    data->opts_cipher->s = 0;
-    data->opts_cipher->v = 0;
     data->opts_cipher->vector = NULL;
     data->opts_cipher->salt = NULL;
     data->opts_cipher->password = NULL;

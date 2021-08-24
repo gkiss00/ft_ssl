@@ -129,24 +129,30 @@ void print_uint8(uint8_t *n)
     }
 }
 
-// void print_uint32(uint32_t n)
-// {
-//     uint8_t *t = (uint8_t *)&n;
+static uint8_t find_char(uint8_t c, uint8_t str[16]) {
+    for (int i = 0; i < 16; ++i) {
+        if(c == str[i])
+            return (uint8_t)c;
+    }
+    return 16;
+}
 
-//     for (int i = 0; i < 4; ++i)
-//     {
-//         print_uint8(t[i]);
-//         printf(" ");
-//     }
-// }
+uint8_t *str_to_hex(uint8_t str[16]) {
+    uint8_t base[16] = "0123456789abcdef";
+    uint8_t res[8];
 
-// void print_uint64(uint64_t n)
-// {
-//     uint8_t *t = (uint8_t *)&n;
+    for (int i = 0; i < 16; ++i) {
+        uint8_t tmp = find_char(str[i], base);
+        if(tmp == 16)
+            return NULL;
+        if(i % 2 == 0) {
+            res[i / 2] |= tmp << 4;
+        } else {
+            res[i / 2] |= tmp;
+        }
+    }
 
-//     for (int i = 0; i < 8; ++i)
-//     {
-//         print_uint8(t[i]);
-//         printf(" ");
-//     }
-// }
+    uint8_t *ret = malloc(8);
+    memcpy(ret, res, 8);
+    return ret;
+}

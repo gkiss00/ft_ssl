@@ -125,6 +125,61 @@ static uint8_t s_box_table[8][4][16] = {
     }
 };
 
+
+// permutate block from 64 to 64
+static void permutate_block_64_to_64(uint8_t *block, int table[64]) {
+    uint8_t permutated_block[8];
+
+    memset(permutated_block, 0, 8); // set memory to 0
+    for (int j = 0; j < 8; ++j) // for each res
+    {
+        for (int k = 0; k < 8; ++k) // for each bits
+        {
+            int l = 8*j + k; // get the current index
+            int shift = table[l] - 1; // get the shift
+            int bit = (block[shift / 8] >> (7 - shift%8)) & 1; // set the bit to 0 or 1
+            permutated_block[j] |= bit << (7 - k); // add to new value
+        }
+    }
+    memcpy(block, permutated_block, 8);
+}
+
+// permutate block from 32 to 48
+static void permutate_block_32_to_48(uint8_t *block_32, uint8_t block_48[6]) {
+    uint8_t permutated_block[6];
+
+    memset(permutated_block, 0, 6); // set memory to 0
+    for (int j = 0; j < 6; ++j) // for each res
+    {
+        for (int k = 0; k < 8; ++k) // for each bits
+        {
+            int l = 8*j + k; // get the current index
+            int shift = e_bit_table[l] - 1; // get the shift
+            int bit = (block_32[shift / 8] >> (7 - shift%8)) & 1; // set the bit to 0 or 1
+            permutated_block[j] |= bit << (7 - k); // add to new value
+        }
+    }
+    memcpy(block_48, permutated_block, 6);
+}
+
+// permutate s_box output from 32 to 32
+static void permutate_s_box_32_to_32(uint8_t *s_box_32) {
+    uint8_t permutated_block[4];
+
+    memset(permutated_block, 0, 4); // set memory to 0
+    for (int j = 0; j < 4; ++j) // for each res
+    {
+        for (int k = 0; k < 8; ++k) // for each bits
+        {
+            int l = 8*j + k; // get the current index
+            int shift = s_box_permutation_table[l] - 1; // get the shift
+            int bit = (s_box_32[shift / 8] >> (7 - shift%8)) & 1; // set the bit to 0 or 1
+            permutated_block[j] |= bit << (7 - k); // add to new value
+        }
+    }
+    memcpy(s_box_32, permutated_block, 4);
+}
+
 // permutate key from 64 to 56
 static void permutate_key_64_to_56(uint8_t key_64[8], uint8_t key_56[7]) {
     uint8_t permutated_key[7];
@@ -192,60 +247,6 @@ static void rotate_key(uint8_t key[7], int shift) {
     memcpy(&key[4], &right[1], 3);
 }
 
-// permutate block from 64 to 64
-static void permutate_block_64_to_64(uint8_t *block, int table[64]) {
-    uint8_t permutated_block[8];
-
-    memset(permutated_block, 0, 8); // set memory to 0
-    for (int j = 0; j < 8; ++j) // for each res
-    {
-        for (int k = 0; k < 8; ++k) // for each bits
-        {
-            int l = 8*j + k; // get the current index
-            int shift = table[l] - 1; // get the shift
-            int bit = (block[shift / 8] >> (7 - shift%8)) & 1; // set the bit to 0 or 1
-            permutated_block[j] |= bit << (7 - k); // add to new value
-        }
-    }
-    memcpy(block, permutated_block, 8);
-}
-
-// permutate block from 32 to 48
-static void permutate_block_32_to_48(uint8_t *block_32, uint8_t block_48[6]) {
-    uint8_t permutated_block[6];
-
-    memset(permutated_block, 0, 6); // set memory to 0
-    for (int j = 0; j < 6; ++j) // for each res
-    {
-        for (int k = 0; k < 8; ++k) // for each bits
-        {
-            int l = 8*j + k; // get the current index
-            int shift = e_bit_table[l] - 1; // get the shift
-            int bit = (block_32[shift / 8] >> (7 - shift%8)) & 1; // set the bit to 0 or 1
-            permutated_block[j] |= bit << (7 - k); // add to new value
-        }
-    }
-    memcpy(block_48, permutated_block, 6);
-}
-
-// permutate s_box output from 32 to 32
-static void permutate_s_box_32_to_32(uint8_t *s_box_32) {
-    uint8_t permutated_block[4];
-
-    memset(permutated_block, 0, 4); // set memory to 0
-    for (int j = 0; j < 4; ++j) // for each res
-    {
-        for (int k = 0; k < 8; ++k) // for each bits
-        {
-            int l = 8*j + k; // get the current index
-            int shift = s_box_permutation_table[l] - 1; // get the shift
-            int bit = (s_box_32[shift / 8] >> (7 - shift%8)) & 1; // set the bit to 0 or 1
-            permutated_block[j] |= bit << (7 - k); // add to new value
-        }
-    }
-    memcpy(s_box_32, permutated_block, 4);
-}
-
 static void combine(uint8_t *res, uint8_t working, uint8_t table[4][16]) {
     uint8_t x;
     uint8_t y;
@@ -295,7 +296,7 @@ static uint32_t get_nb_block(uint8_t *msg) {
     uint32_t nb_block;
 
     size = ft_strlen(msg);
-    nb_block = (size / 64) + (size % 64 == 0 ? 0 : 1);
+    nb_block = (size / 8) + (size % 8 == 0 ? 0 : 1);
     return nb_block;
 }
 
@@ -306,7 +307,7 @@ static void get_keys(
     uint8_t key_48_table[16][6]
 ) {
     memset(key_56, 0, 7);
-    permutate_key_64_to_56(key_64, key_56); // ok
+    permutate_key_64_to_56(key_64, key_56);
 
     for (int i = 0; i < 16; ++i) {
         if(i == 0)
@@ -314,9 +315,6 @@ static void get_keys(
         else
             memcpy(key_56_table[i], key_56_table[i - 1], 7);
         rotate_key(key_56_table[i], shift_table[i]);
-    }
-
-    for(int i = 0; i < 16; ++i) {
         permutate_key_56_to_48(key_56_table[i], key_48_table[i]);
     }
 }
@@ -330,7 +328,6 @@ static void xor(uint8_t *ptr1, uint8_t *ptr2, int size) {
 static void add(uint8_t *ptr1, uint8_t *ptr2, uint8_t *res, int size) {
     uint32_t *t1 = (uint32_t*)ptr1;
     uint32_t *t2 = (uint32_t*)ptr2;
-
     uint32_t t3 = *t1 ^ *t2;
     memcpy(res, &t3, 4);
 }
@@ -339,19 +336,18 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
     uint8_t key_56[7];
     uint8_t key_56_table[16][7];
     uint8_t key_48_table[16][6];
+    int nb_block;
 
+    nb_block  = (int)get_nb_block(msg);
     get_keys(key_64, key_56, key_56_table, key_48_table);
-
-    int nb_block = (int)get_nb_block(msg);
 
     for (int i = 0; i < nb_block; ++i) {
         uint8_t block[8];
-        memcpy(block, &msg[i * 8], 8);
-
-        permutate_block_64_to_64(block, block_permutation_table);
-
         uint8_t left_32_table[17][4];
         uint8_t right_32_table[17][4];
+
+        memcpy(block, &msg[i * 8], 8);
+        permutate_block_64_to_64(block, block_permutation_table);
         memcpy(left_32_table[0], &block[0], 4);
         memcpy(right_32_table[0], &block[4], 4);
 
@@ -362,38 +358,25 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
 
             if(k != 0)
                 memcpy(left_32_table[k], right_32_table[k - 1], 4);
-
-
             permutate_block_32_to_48(right_32_table[k], right_48);
             xor(right_48, key_48_table[k], 6);
             s_box(right_48, s_box_output);
             permutate_s_box_32_to_32(s_box_output);
-
-            
-            add(left_32_table[k], s_box_output, right_32_table[k + 1], 4); // ok
-                
+            add(left_32_table[k], s_box_output, right_32_table[k + 1], 4);   
         }
-        memcpy(left_32_table[16], right_32_table[15], 4);
-           
         uint8_t final_block[8];
+
+        memcpy(left_32_table[16], right_32_table[15], 4);  
         memcpy(&final_block[0], &right_32_table[16], 4);
         memcpy(&final_block[4], &left_32_table[16], 4);
         permutate_block_64_to_64(final_block, block_final_permutation_table);
         memcpy(&msg[i * 8], final_block, 8);
-
-        printf("res : ");
-        PRINT_UINT64(&msg[i * 8]);
-        puts("");
-
-        for (int j = 0; j < 8; ++j) {
-            printf("%.2x", msg[(i * 8) + j]);
-        }
     }
 }
 
 void ft_des(int argc, char **argv, t_data *data) {
     uint8_t key[8] = { 19, 52, 87, 121, 155, 188, 223, 241 };
-    uint8_t msg[8] = { 1, 35, 69, 103, 137, 171, 205, 239 };
+    uint8_t msg[9] = { 1, 35, 69, 103, 137, 171, 205, 239, 0 };
     parsing_cipher(argc, argv, data);
     if (data->node == NULL)
         get_stdin_input(data);

@@ -1,5 +1,13 @@
 #include "./../include/ft_ssl.h"
 
+static void print_usage() {
+    printf("md5 sha256: usage:\n");
+    printf("\t-p stdin\n");
+    printf("\t-q quiet\n");
+    printf("\t-r reverse\n");
+    printf("\t-s <str> string\n");
+}
+
 static void addArg(t_data *data, uint32_t type, uint8_t *arg, uint8_t *file_name) {
     t_node *node = new_node(type, arg, file_name);
     node_add_back(&data->node, node);
@@ -27,6 +35,7 @@ void    parsing_digest(int argc, char **argv, t_data *data) {
                 addArg(data, STRING, (uint8_t *)str, NULL);
                 break;
             case '?':
+                print_usage();
                 exit(EXIT_FAILURE);
                 break;
             default:
