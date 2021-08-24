@@ -51,7 +51,7 @@ typedef struct              s_option_base64
 
 typedef struct              s_option_cipher
 {
-    uint32_t                a; //decrypt/encrypt
+    uint32_t                a; // decrypt/encrypt
     uint32_t                d; // decrypt mode
     uint32_t                e; // encrypt mode
     uint32_t                i; // input file
@@ -60,6 +60,10 @@ typedef struct              s_option_cipher
     uint32_t                p; // password
     uint32_t                s; // salt hexadecimal
     uint32_t                v; // vector hexadecimal
+    uint8_t                 *vector;
+    uint8_t                 *salt;
+    uint8_t                 *password;
+    uint8_t                 *key;
 }                           t_option_cipher;
 
 typedef struct              s_node

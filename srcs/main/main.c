@@ -40,6 +40,10 @@ static void init_data(
     data->opts_cipher->p = 0;
     data->opts_cipher->s = 0;
     data->opts_cipher->v = 0;
+    data->opts_cipher->vector = NULL;
+    data->opts_cipher->salt = NULL;
+    data->opts_cipher->password = NULL;
+    data->opts_cipher->key = NULL;
 }
 
 int         main(int argc, char **argv)

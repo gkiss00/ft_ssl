@@ -66,10 +66,12 @@ static int s_box_permutation_table[32] = {
     22,  11,   4,  25,
 };
 
-static int shift_table[16] = { 1, 1, 2, 2,
-                        2, 2, 2, 2,
-                        1, 2, 2, 2,
-                        2, 2, 2, 1 };
+static int shift_table[16] = { 
+    1, 1, 2, 2,
+    2, 2, 2, 2,
+    1, 2, 2, 2,
+    2, 2, 2, 1 
+};
 
 // S-box Table
 static uint8_t s_box_table[8][4][16] = { 
@@ -341,7 +343,7 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
     get_keys(key_64, key_56, key_56_table, key_48_table);
 
     int nb_block = (int)get_nb_block(msg);
-    printf("nb block : %d\n", nb_block);
+
     for (int i = 0; i < nb_block; ++i) {
         uint8_t block[8];
         memcpy(block, &msg[i * 8], 8);
