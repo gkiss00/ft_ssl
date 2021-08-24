@@ -11,6 +11,7 @@
 # include <assert.h>
 # include <stdbool.h>
 # include <ctype.h>
+# include <time.h>
 
 #define STRING 1
 #define FILE 2

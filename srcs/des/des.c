@@ -250,9 +250,7 @@ static void combine(uint8_t *res, uint8_t working, uint8_t table[4][16]) {
 
     x = X(working);
     y = Y(working);
-    printf("%d %d\n", (int)x, (int)y);
     *res = table[y][x];
-    PRINT_UINT8(res); puts("");
 }
 
 // 48 bits to 32 bits
@@ -264,9 +262,6 @@ static void s_box(uint8_t block[6], uint8_t res[4]) {
     combine(&tmp[0], working, s_box_table[0]);
 
     working = ((block[0] << 6) >> 2) | (block[1] >> 4);
-    // PRINT_UINT8(&block[0]); puts("");
-    // PRINT_UINT8(&block[1]); puts("");
-    // PRINT_UINT8(&working); puts("");
     combine(&tmp[1], working, s_box_table[1]);
 
     working = ((block[1] << 4) >> 2) | (block[2] >> 6);
@@ -308,16 +303,8 @@ static void get_keys(
     uint8_t key_56_table[16][7], 
     uint8_t key_48_table[16][6]
 ) {
-    printf("key 64: ");
-    PRINT_UINT64(key_64);
-    puts("");
-
     memset(key_56, 0, 7);
     permutate_key_64_to_56(key_64, key_56); // ok
-
-    printf("key 56: ");
-    PRINT_UINT56(key_56);
-    puts("");
 
     for (int i = 0; i < 16; ++i) {
         if(i == 0)
@@ -325,18 +312,10 @@ static void get_keys(
         else
             memcpy(key_56_table[i], key_56_table[i - 1], 7);
         rotate_key(key_56_table[i], shift_table[i]);
-
-        printf("key 56 %d: ", i);
-        PRINT_UINT56(key_56_table[i]);
-        puts("");
     }
 
     for(int i = 0; i < 16; ++i) {
         permutate_key_56_to_48(key_56_table[i], key_48_table[i]);
-
-        printf("key 48 %d: ", i);
-        PRINT_UINT48(key_48_table[i]);
-        puts("");
     }
 }
 
@@ -344,6 +323,14 @@ static void xor(uint8_t *ptr1, uint8_t *ptr2, int size) {
     for (int i = 0; i < size; ++i) {
         ptr1[i] = XOR(ptr1[i], ptr2[i]);
     }
+}
+
+static void add(uint8_t *ptr1, uint8_t *ptr2, uint8_t *res, int size) {
+    uint32_t *t1 = (uint32_t*)ptr1;
+    uint32_t *t2 = (uint32_t*)ptr2;
+
+    uint32_t t3 = *t1 ^ *t2;
+    memcpy(res, &t3, 4);
 }
 
 static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
@@ -359,40 +346,46 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
         uint8_t block[8];
         memcpy(block, &msg[i * 8], 8);
 
-        printf("block %d: ", i);
-        PRINT_UINT64(block);
-        puts("");
-
         permutate_block_64_to_64(block, block_permutation_table);
 
-        printf("block permuted %d: ", i);
-        PRINT_UINT64(block);
-        puts("");
+        uint8_t left_32_table[17][4];
+        uint8_t right_32_table[17][4];
+        memcpy(left_32_table[0], &block[0], 4);
+        memcpy(right_32_table[0], &block[4], 4);
 
-        uint8_t left_32[16][4];
-        uint8_t right_32[16][4];
-        memcpy(left_32[0], &block[0], 4);
-        memcpy(right_32[0], &block[4], 4);
-
-        for (int k = 0; k < 1; ++k) {
+        for (int k = 0; k < 16; ++k) {
             uint8_t left_48[6];
             uint8_t right_48[6];
-            uint8_t res[4];
+            uint8_t s_box_output[4];
 
-            permutate_block_32_to_48(right_32[k], right_48);
+            if(k != 0)
+                memcpy(left_32_table[k], right_32_table[k - 1], 4);
+
+
+            permutate_block_32_to_48(right_32_table[k], right_48);
             xor(right_48, key_48_table[k], 6);
-            s_box(right_48, res);
-            permutate_s_box_32_to_32(res); // ok
+            s_box(right_48, s_box_output);
+            permutate_s_box_32_to_32(s_box_output);
 
-            printf("block s_box permutated %d: ", k);
-            PRINT_UINT32(res);
-            puts("");
+            
+            add(left_32_table[k], s_box_output, right_32_table[k + 1], 4); // ok
+                
         }
+        memcpy(left_32_table[16], right_32_table[15], 4);
+           
         uint8_t final_block[8];
-        memcpy(&final_block[0], &right_32[15], 4);
-        memcpy(&final_block[4], &left_32[15], 4);
-        permutate_block_64_to_64(block, block_final_permutation_table);
+        memcpy(&final_block[0], &right_32_table[16], 4);
+        memcpy(&final_block[4], &left_32_table[16], 4);
+        permutate_block_64_to_64(final_block, block_final_permutation_table);
         memcpy(&msg[i * 8], final_block, 8);
+
+        printf("res : ");
+        PRINT_UINT64(&msg[i * 8]);
+        puts("");
+
+        for (int j = 0; j < 8; ++j) {
+            printf("%.2x", msg[(i * 8) + j]);
+        }
     }
 }
 
@@ -404,5 +397,4 @@ void ft_des(int argc, char **argv, t_data *data) {
         get_stdin_input(data);
     fill_data_contents(data);
     ft_encrypt(msg, key);
-    printf("END\n");
 }
