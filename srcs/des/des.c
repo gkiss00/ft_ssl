@@ -325,7 +325,7 @@ static void xor(uint8_t *ptr1, uint8_t *ptr2, int size) {
     }
 }
 
-static void add(uint8_t *ptr1, uint8_t *ptr2, uint8_t *res, int size) {
+static void add(uint8_t *ptr1, uint8_t *ptr2, uint8_t *res) {
     uint32_t *t1 = (uint32_t*)ptr1;
     uint32_t *t2 = (uint32_t*)ptr2;
     uint32_t t3 = *t1 ^ *t2;
@@ -352,7 +352,6 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
         memcpy(right_32_table[0], &block[4], 4);
 
         for (int k = 0; k < 16; ++k) {
-            uint8_t left_48[6];
             uint8_t right_48[6];
             uint8_t s_box_output[4];
 
@@ -362,7 +361,7 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
             xor(right_48, key_48_table[k], 6);
             s_box(right_48, s_box_output);
             permutate_s_box_32_to_32(s_box_output);
-            add(left_32_table[k], s_box_output, right_32_table[k + 1], 4);   
+            add(left_32_table[k], s_box_output, right_32_table[k + 1]);   
         }
         uint8_t final_block[8];
 
@@ -375,11 +374,16 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
 }
 
 void ft_des(int argc, char **argv, t_data *data) {
-    uint8_t key[8] = { 19, 52, 87, 121, 155, 188, 223, 241 };
-    uint8_t msg[9] = { 1, 35, 69, 103, 137, 171, 205, 239, 0 };
     parsing_cipher(argc, argv, data);
     if (data->node == NULL)
         get_stdin_input(data);
     fill_data_contents(data);
-    ft_encrypt(msg, key);
+    int nb_block = (int)get_nb_block(data->node->arg);
+    ft_encrypt(data->node->arg, data->opts_cipher->key);
+    write(1, data->node->arg, nb_block * 8);
+    // puts("");
+    // for(int i = 0; i < nb_block; ++i) {
+    //     PRINT_UINT64(&data->node->arg[i * 8]);
+    //     puts("");
+    // }
 }
