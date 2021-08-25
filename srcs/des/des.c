@@ -301,11 +301,12 @@ static uint32_t get_nb_block(uint8_t *msg) {
 }
 
 static void get_keys(
-    uint8_t key_64[8], 
-    uint8_t key_56[7],
-    uint8_t key_56_table[16][7], 
+    uint8_t key_64[8],
     uint8_t key_48_table[16][6]
 ) {
+    uint8_t key_56[7];
+    uint8_t key_56_table[16][7];
+
     memset(key_56, 0, 7);
     permutate_key_64_to_56(key_64, key_56);
 
@@ -333,13 +334,11 @@ static void add(uint8_t *ptr1, uint8_t *ptr2, uint8_t *res) {
 }
 
 static void ft_encrypt(uint8_t *msg, uint8_t key_64[8]) {
-    uint8_t key_56[7];
-    uint8_t key_56_table[16][7];
-    uint8_t key_48_table[16][6];
     int nb_block;
+    uint8_t key_48_table[16][6];
 
     nb_block  = (int)get_nb_block(msg);
-    get_keys(key_64, key_56, key_56_table, key_48_table);
+    get_keys(key_64, key_48_table);
 
     for (int i = 0; i < nb_block; ++i) {
         uint8_t block[8];
