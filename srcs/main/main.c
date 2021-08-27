@@ -30,8 +30,7 @@ static void init_data(
     data->opts_base64->e = 0;
 
     data->opts_cipher->a = 0;
-    data->opts_cipher->d = 0;
-    data->opts_cipher->e = 0;
+    data->opts_cipher->mode = ENCRYPT;
     data->opts_cipher->vector = NULL;
     data->opts_cipher->salt = NULL;
     data->opts_cipher->password = NULL;

@@ -127,15 +127,16 @@ uint8_t *str_to_hex(uint8_t str[16]) {
     uint8_t base[16] = "0123456789abcdef";
     uint8_t res[8];
 
+    memset(res, 0, 8);
     for (int i = 0; i < 16; ++i) {
         uint8_t tmp = find_char(str[i], base);
         if(tmp == 16)
             return NULL;
         if(i % 2 == 0) {
-            res[i / 2] |= tmp << 4;
+            res[i / 2] |= tmp << 4; // 0001
         } else {
-            res[i / 2] |= tmp;
-        }
+            res[i / 2] |= tmp; // 0000
+        } // => 0001 0000
     }
 
     uint8_t *ret = malloc(8);

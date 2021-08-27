@@ -18,6 +18,12 @@
 #define STRING 1
 #define FILE 2
 
+#define ECB 1
+#define CBC 2
+
+#define ENCRYPT 1
+#define DECRYPT 2
+
 #define BIT(n, k) (n >> k) & 1
 #define CIRCULAR_SHIFT_28(n, k) ((n << k + 4) >> 4) | (n >> (28 - k))
 
@@ -52,12 +58,12 @@ typedef struct              s_option_base64
 typedef struct              s_option_cipher
 {
     uint32_t                a; // decrypt/encrypt
-    uint32_t                d; // decrypt mode
-    uint32_t                e; // encrypt mode
+    int                     mode; // ENCRYPT DECRYPT
     uint8_t                 *vector; // vector hexadecimal
     uint8_t                 *salt; // salt hexadecimal
     uint8_t                 *password; // password
     uint8_t                 *key; // key hexadecimal
+    int                     kind; // ECB CBC 
 }                           t_option_cipher;
 
 typedef struct              s_node
@@ -65,6 +71,7 @@ typedef struct              s_node
     uint32_t                type;
     uint8_t                 *arg;
     uint8_t                 *file_name;
+    uint32_t                file_size;
     struct s_node           *next;
 }                           t_node;
 
@@ -129,9 +136,7 @@ char        *to_upper(char * temp);
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 uint8_t     *str_to_hex(uint8_t str[16]);
 
-void print_uint8(uint8_t *n);
-// void print_uint32(uint32_t n);
-// void print_uint64(uint64_t n);
+void        print_uint8(uint8_t *n);
 
 // PARSING
 void        get_stdin_input(t_data *data);
