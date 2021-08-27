@@ -48,6 +48,6 @@ int         main(int argc, char **argv)
     check_error(argc);
     getCmd(&data, (uint8_t**)argv);
     hub(argc, argv, &data);
-    end(&data);
+    //end(&data);
     exit(EXIT_SUCCESS);
 }

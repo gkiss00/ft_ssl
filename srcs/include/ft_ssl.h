@@ -135,8 +135,9 @@ uint8_t     *first_line(uint8_t *temp);
 char        *to_upper(char * temp);
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 uint8_t     *str_to_hex(uint8_t str[16]);
-
+uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2);
 void        print_uint8(uint8_t *n);
+void        fill_data_contents_binary(t_data *data);
 
 // PARSING
 void        get_stdin_input(t_data *data);
@@ -156,6 +157,7 @@ t_node      *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name);
 t_node      *node_last(t_node *node);
 void        node_add_back(t_node **head, t_node *new);
 
+// COMMAND
 t_command   *new_command(uint8_t *name, void (*hash)(int, char**, t_data*));
 t_command   *command_last(t_command *command);
 void        command_add_back(t_command **head, t_command *new);

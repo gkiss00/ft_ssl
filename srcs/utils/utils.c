@@ -67,6 +67,29 @@ uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2)
     return (str);
 }
 
+uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2)
+{
+    int i = 0;
+    int j = 0;
+    uint8_t     *str;
+
+    str = malloc(sizeof(uint8_t) * (size1 + size2 + 1));
+    if (str == NULL)
+        return NULL;
+    while(i < size1)
+    {
+        str[i] = s1[i];
+        ++i;
+    }
+    while(j < size2){
+        str[i + j] = s2[j];
+        ++j;
+    }
+    str[i + j] = '\0';
+    free(s1);
+    return (str);
+}
+
 char *to_upper(char * temp) {
     char *name = malloc(strlen(temp));
     if(name == NULL) {
