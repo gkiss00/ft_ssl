@@ -269,17 +269,17 @@ static void get_keys(
 
 static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv[8], int mode, int kind) {
     uint8_t key_48_table[16][6];
-    iv = 0;
+
     get_keys(key_64, key_48_table);
-    printf("%d %d %d\n", kind, mode, nb_block);
+
     for (int i = 0; i < nb_block; ++i) {
         uint8_t block[8];
         uint8_t left_32_table[17][4];
         uint8_t right_32_table[17][4];
 
         memcpy(block, &msg[i * 8], 8);
-        // if(kind == CBC && mode == ENCRYPT)
-        //     i == 0 ? xor(block, iv, 8) : xor(block, &msg[(i - 1) * 8], 8);
+        if(kind == CBC && mode == ENCRYPT)
+            i == 0 ? xor(block, iv, 8) : xor(block, &msg[(i - 1) * 8], 8);
 
         permute(8, block, 8, block, block_permutation_table);
         memcpy(left_32_table[0], &block[0], 4);
@@ -303,8 +303,8 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
         memcpy(&final_block[0], &right_32_table[16], 4);
         memcpy(&final_block[4], &left_32_table[16], 4);
         permute(8, final_block, 8, final_block, block_final_permutation_table);
-        // if(kind == CBC && mode == DECRYPT)
-        //     i == 0 ? xor(block, iv, 8) : xor(block, &msg[(i - 1) * 8], 8);
+        if(kind == CBC && mode == DECRYPT)
+            i == 0 ? xor(block, iv, 8) : xor(block, &msg[(i - 1) * 8], 8);
         memcpy(&msg[i * 8], final_block, 8);
     }
 }
