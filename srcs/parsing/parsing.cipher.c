@@ -53,14 +53,16 @@ static uint8_t *generate_key(uint8_t *pwd, uint8_t salt[8]){
     return ft_strdup(res);
 }
 
-static void pre_process(t_data *data){
+void pre_process(t_data *data){
     // fill message
     if(data->node) {
         if(data->node->arg) {
             uint32_t size = ft_strlen(data->node->arg);
             if(size % 8 != 0) {
-                char *tmp = calloc(size + (8 - (size % 8)), 1);
-                memcpy(tmp, data->node->arg, size + (8 - (size % 8)));
+                char *tmp = calloc(size + (8 - (size % 8)) + 1, 1);
+                memset(tmp, 0, size + (8 - (size % 8)) + 1);
+                memset(tmp, 8 - (size % 8), size + (8 - (size % 8)));
+                memcpy(tmp, data->node->arg, size);
                 free(data->node->arg);
                 data->node->arg = (uint8_t*)tmp;
             }
@@ -190,5 +192,4 @@ void    parsing_cipher(int argc, char **argv, t_data *data) {
     for (i = optind + 1; i < argc; i++){
         addArg(data, FILE, NULL, (uint8_t *)argv[i]);
     }
-    pre_process(data);
 }

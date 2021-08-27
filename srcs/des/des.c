@@ -377,7 +377,15 @@ void ft_des(int argc, char **argv, t_data *data) {
     if (data->node == NULL)
         get_stdin_input(data);
     fill_data_contents(data);
+    pre_process(data);
+    
     int nb_block = (int)get_nb_block(data->node->arg);
+    // for(int i = 0; i < nb_block; ++i) {
+    //     PRINT_UINT64(&data->node->arg[i * 8]);
+    //     puts("");
+    // }
+    // printf("%d\n", (int)ft_strlen(data->node->arg));
+    // printf("%d\n", nb_block);
     ft_encrypt(data->node->arg, data->opts_cipher->key);
     write(1, data->node->arg, nb_block * 8);
     // puts("");

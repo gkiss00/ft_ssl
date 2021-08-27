@@ -97,20 +97,6 @@ uint8_t *first_line(uint8_t *temp) {
 	return line;
 }
 
-static int pow(int b, int e)
-{
-    int ret = b;
-    if (e == 0)
-    {
-        return (1);
-    }
-    for (int i = 0; i < e - 1; ++i)
-    {
-        ret *= b;
-    }
-    return (ret);
-}
-
 void print_uint8(uint8_t *n)
 {
     int t = *n;
@@ -132,7 +118,7 @@ void print_uint8(uint8_t *n)
 static uint8_t find_char(uint8_t c, uint8_t str[16]) {
     for (int i = 0; i < 16; ++i) {
         if(c == str[i])
-            return (uint8_t)c;
+            return (uint8_t)i;
     }
     return 16;
 }

@@ -12,6 +12,8 @@
 # include <stdbool.h>
 # include <ctype.h>
 # include <time.h>
+# include <math.h>
+# include <limits.h>
 
 #define STRING 1
 #define FILE 2
@@ -106,6 +108,11 @@ uint8_t     *decrypt_base64(uint8_t *msg);
 
 // DES
 void        ft_des(int argc, char **argv, t_data *data);
+void        pre_process(t_data *data);
+
+// GENRSA
+
+void        ft_genrsa(int argc, char **argv, t_data *data);
 
 // ERROR
 void        check_error(int argc);
@@ -131,6 +138,7 @@ void        get_stdin_input(t_data *data);
 void        parsing_digest(int argc, char **argv, t_data *data);
 void        parsing_base64(int argc, char **argv, t_data *data);
 void        parsing_cipher(int argc, char **argv, t_data *data);
+void        parsing_genrsa(int argc, char **argv, t_data *data);
 
 // BIT OPERAND
 uint64_t    small_to_big_endian_64(uint64_t n);

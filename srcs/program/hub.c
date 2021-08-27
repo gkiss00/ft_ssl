@@ -5,6 +5,7 @@ t_command   *init_cmd(){
     command_add_back(&cmd, new_command((uint8_t*)"sha256", &ft_sha256));
     command_add_back(&cmd, new_command((uint8_t*)"base64", &ft_base64));
     command_add_back(&cmd, new_command((uint8_t*)"des", &ft_des));
+    command_add_back(&cmd, new_command((uint8_t*)"genrsa", &ft_genrsa));
 
     return cmd;
 }
