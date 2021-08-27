@@ -11,6 +11,9 @@ t_node *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name) {
     node->type = type;
     node->arg = arg ? (uint8_t*)strdup((char*)arg): NULL;
     node->file_name = file_name ? (uint8_t*)strdup((char*)file_name): NULL;
+    struct stat file_info;
+    stat((char*)file_name, &file_info);
+    node->file_size = (uint32_t)file_info.st_size;
     node->next = NULL;
     return (node);
 }

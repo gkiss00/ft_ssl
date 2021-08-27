@@ -1,5 +1,7 @@
 #include "./../include/ft_ssl.h"
 
+static uint32_t get_new_size(uint32_t size, uint8_t *msg);
+
 static int key_permutation_table1[56] = {
     57, 49, 41, 33, 25, 17,  9,
      1, 58, 50, 42, 34, 26, 18,
@@ -125,7 +127,36 @@ static uint8_t s_box_table[8][4][16] = {
     }
 };
 
-// n inital block size | m new block size | table
+static uint32_t get_nb_block(uint8_t *msg) {
+    uint32_t size;
+    uint32_t nb_block;
+
+    size = ft_strlen(msg);
+    nb_block = (size / 8) + (size % 8 == 0 ? 0 : 1);
+    return nb_block;
+}
+
+static uint32_t get_nb_block_from_size(uint32_t size) {
+    uint32_t nb_block;
+
+    nb_block = (size / 8) + (size % 8 == 0 ? 0 : 1);
+    return nb_block;
+}
+
+static void xor(uint8_t *ptr1, uint8_t *ptr2, int size) {
+    for (int i = 0; i < size; ++i) {
+        ptr1[i] = XOR(ptr1[i], ptr2[i]);
+    }
+}
+
+static void add(uint8_t *ptr1, uint8_t *ptr2, uint8_t *res) {
+    uint32_t *t1 = (uint32_t*)ptr1;
+    uint32_t *t2 = (uint32_t*)ptr2;
+    uint32_t t3 = *t1 ^ *t2;
+    memcpy(res, &t3, 4);
+}
+
+// n : inital block size | m : new block size | permutation table
 static void permute(int n, uint8_t block[n], int m, uint8_t permutated_block[m], int permutation_table[m * 8])
 {
     uint8_t tmp[m];
@@ -218,35 +249,6 @@ static void s_box(uint8_t block[6], uint8_t res[4]) {
     res[3] = (tmp[6] << 4) | tmp[7];
 }
 
-static uint32_t get_nb_block(uint8_t *msg) {
-    uint32_t size;
-    uint32_t nb_block;
-
-    size = ft_strlen(msg);
-    nb_block = (size / 8) + (size % 8 == 0 ? 0 : 1);
-    return nb_block;
-}
-
-static uint32_t get_nb_block_from_size(uint32_t size) {
-    uint32_t nb_block;
-
-    nb_block = (size / 8) + (size % 8 == 0 ? 0 : 1);
-    return nb_block;
-}
-
-static void xor(uint8_t *ptr1, uint8_t *ptr2, int size) {
-    for (int i = 0; i < size; ++i) {
-        ptr1[i] = XOR(ptr1[i], ptr2[i]);
-    }
-}
-
-static void add(uint8_t *ptr1, uint8_t *ptr2, uint8_t *res) {
-    uint32_t *t1 = (uint32_t*)ptr1;
-    uint32_t *t2 = (uint32_t*)ptr2;
-    uint32_t t3 = *t1 ^ *t2;
-    memcpy(res, &t3, 4);
-}
-
 static void get_keys(
     uint8_t key_64[8],
     uint8_t key_48_table[16][6]
@@ -276,8 +278,12 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
         uint8_t block[8];
         uint8_t left_32_table[17][4];
         uint8_t right_32_table[17][4];
+        
 
         memcpy(block, &msg[i * 8], 8);
+        // printf("block : ");
+        // PRINT_UINT64(block);
+        // puts("");
         if(kind == CBC && mode == ENCRYPT)
             i == 0 ? xor(block, iv, 8) : xor(block, &msg[(i - 1) * 8], 8);
 
@@ -304,7 +310,13 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
         memcpy(&final_block[4], &left_32_table[16], 4);
         permute(8, final_block, 8, final_block, block_final_permutation_table);
         if(kind == CBC && mode == DECRYPT)
-            i == 0 ? xor(block, iv, 8) : xor(block, &msg[(i - 1) * 8], 8);
+            i == 0 ? xor(final_block, iv, 8) : xor(final_block, &msg[(i - 1) * 8], 8);
+        // printf("final : ");
+        // PRINT_UINT64(final_block);
+        // printf("  ");
+        // fflush(stdout);
+        // write(1, final_block, 8);
+        // puts("");
         memcpy(&msg[i * 8], final_block, 8);
     }
 }
@@ -317,8 +329,46 @@ void ft_des(int argc, char **argv, t_data *data) {
     pre_process(data);
 
     uint8_t *msg = (data->input) ? data->input : data->node->arg;
-    int nb_block = (data->input) ? (int)get_nb_block(data->input) : (int)get_nb_block_from_size(data->node->file_size);
-    printf("%d\n", nb_block);
+    int nb_block;
+
+    // decode base64
+    if(data->opts_cipher->a == 1 && data->opts_cipher->mode == ENCRYPT) {
+        uint32_t new_size = get_new_size(ft_strlen(msg), msg);
+        msg = decrypt_base64(msg);
+        nb_block = (int)get_nb_block_from_size(new_size);
+    } else {
+        nb_block = (data->input) ? (int)get_nb_block(data->input) : (int)get_nb_block_from_size(data->node->file_size);
+    }
+
     ft_encrypt(msg, data->opts_cipher->key, nb_block, data->opts_cipher->vector, data->opts_cipher->mode, data->opts_cipher->kind);
-    write(1, data->node->arg, nb_block * 8);
+    
+    // encode base64
+    if(data->opts_cipher->a == 1 && data->opts_cipher->mode == ENCRYPT) {
+        msg = encrypt_base64(msg, nb_block * 8);
+        write(1, msg, (int)ft_strlen(msg));
+    }
+    write(1, msg, nb_block * 8);
+}
+
+static uint32_t get_rest1(uint8_t *msg) {
+    uint32_t size = ft_strlen(msg);
+    uint32_t rest = 0;
+    for (uint32_t i = size -1; i >= 0; --i){
+        if (msg[i] == '=')
+            ++rest;
+        else
+            break;
+    }
+    return rest;
+}
+
+static uint32_t get_new_size(uint32_t size, uint8_t *msg) {
+    uint32_t rest = get_rest1(msg);
+    uint32_t new_size = 0;
+    new_size = (size / 4) * 3;
+    if(rest == 1)
+        --size;
+    if (rest == 2)
+        size -= 2;
+    return new_size + 1;
 }

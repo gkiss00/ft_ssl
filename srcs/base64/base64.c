@@ -35,12 +35,12 @@ static void ft_encrypt(t_data *data) {
     uint8_t *code = NULL;
 
     if(data->node == NULL) {
-        code = encrypt_base64(data->input);
+        code = encrypt_base64(data->input, ft_strlen(data->input));
     } else {
         if(data->node->arg == NULL){
             fprintf(stderr, "Unable to open '%s': No such file or directory", data->node->file_name);
         } else {
-            code = encrypt_base64(data->node->arg);
+            code = encrypt_base64(data->node->arg, data->node->file_size);
         }
     }
     if (data->output_file != NULL) {

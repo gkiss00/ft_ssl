@@ -110,7 +110,7 @@ void        hash_sha256(uint8_t *msg, uint8_t *hashed);
 
 // BASE64
 void        ft_base64(int argc, char **argv, t_data *data);
-uint8_t     *encrypt_base64(uint8_t *msg);
+uint8_t     *encrypt_base64(uint8_t *msg, uint32_t size);
 uint8_t     *decrypt_base64(uint8_t *msg);
 
 // DES

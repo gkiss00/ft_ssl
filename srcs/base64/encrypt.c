@@ -32,8 +32,8 @@ static uint32_t get_new_size(uint32_t size) {
     return new_size + 1;
 }
 
-uint8_t *encrypt_base64(uint8_t *msg) {
-    uint32_t size = ft_strlen(msg); 
+uint8_t *encrypt_base64(uint8_t *msg, uint32_t size) {
+    //uint32_t size = ft_strlen(msg); 
     uint32_t new_size = get_new_size(size);
     uint32_t nb_block = get_nb_block(size);
     uint8_t *new_msg = calloc(new_size, 1);

@@ -91,10 +91,7 @@ void pre_process(t_data *data){
     if(data->opts_cipher->mode == ENCRYPT) {
         if(data->node) {
             if(data->node->arg) {
-                struct stat file_info;
-                stat((char*)data->node->file_name, &file_info);
-                data->node->file_size = (uint32_t)file_info.st_size;
-                data->node->arg = add_extra_bytes(data->node->arg, (uint32_t)file_info.st_size);
+                data->node->arg = add_extra_bytes(data->node->arg, (uint32_t)data->node->file_size);
             }
         } else {
             if(data->input) {
@@ -140,11 +137,9 @@ void pre_process(t_data *data){
 
     // vector
     if(data->opts_cipher->vector == NULL && data->opts_cipher->kind == CBC) {
-        //generate from pass and salt
         fprintf(stderr, "iv need to be initialized\n");
         exit(EXIT_FAILURE);
-    } else if (data->opts_cipher->vector == NULL) {
-    } else {
+    } else if (data->opts_cipher->vector == NULL) { } else {
         data->opts_cipher->vector = get_hex(data->opts_cipher->vector, "vector");
     }
 }
