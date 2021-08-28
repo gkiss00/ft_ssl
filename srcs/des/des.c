@@ -260,6 +260,8 @@ static void get_keys(
 static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv[8], int mode, int kind, int size) {
     uint8_t key_48_table[16][6];
     uint8_t *cpy = calloc(size + 1, 1);
+    if(cpy == NULL)
+        exit_error(MALLOC_ERROR);
     memcpy(cpy, msg, size);
 
     get_keys(key_64, key_48_table);
@@ -315,6 +317,8 @@ uint8_t *remove_line(uint8_t *msg, uint32_t size) {
             ++count;
     }
     uint8_t *res = calloc(size - count + 1, 1);
+    if(res == NULL)
+        exit_error(MALLOC_ERROR);
     uint32_t j = 0;
     for(uint32_t i = 0; i < size; ++i) {
         if (msg[i] != '\n') {

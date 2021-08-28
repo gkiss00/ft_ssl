@@ -16,6 +16,8 @@ static void print_usage() {
 static uint8_t *generate_salt(){
     uint8_t *salt;
     salt = calloc(8, 1);
+    if(salt == NULL)
+        exit_error(MALLOC_ERROR);
 
     long int r = random();
     memcpy(salt, &r, 4);
@@ -28,6 +30,8 @@ static uint8_t *generate_salt(){
 static uint8_t *generate_key(uint8_t *pwd, uint8_t salt[8]){
     while(ft_strlen(pwd) < 8 && ft_strlen(pwd) % 8 != 0) {
         uint8_t *tmp = calloc((ft_strlen(pwd) * 2) + 1, 1);
+        if(tmp == NULL)
+            exit_error(MALLOC_ERROR);
         memcpy(tmp, pwd, ft_strlen(pwd));
         memcpy(&tmp[ft_strlen(pwd)], pwd, ft_strlen(pwd));
         free(pwd);
@@ -57,6 +61,8 @@ static uint8_t *get_hex(uint8_t *input, char *str) {
         fprintf(stderr, "hex string is too long, ignoring excess\n");
 
     uint8_t *tmp = calloc(16, 1);
+    if(tmp == NULL)
+        exit_error(MALLOC_ERROR);
     memset(tmp, '0', 16);
     memcpy(tmp, input, ft_strlen(input) > 16 ? 16 : ft_strlen(input));
 
@@ -74,6 +80,8 @@ static uint8_t *get_hex(uint8_t *input, char *str) {
 
 static uint8_t *add_extra_bytes(uint8_t *str, uint32_t size) {
     char *tmp = calloc(size + (8 - (size % 8)) + 1, 1);
+    if(tmp == NULL)
+        exit_error(MALLOC_ERROR);
     memset(tmp, 0, size + (8 - (size % 8)) + 1);
     memset(tmp, 8 - (size % 8), size + (8 - (size % 8)));
     memcpy(tmp, str, size);

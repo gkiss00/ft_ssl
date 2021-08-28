@@ -61,12 +61,11 @@ uint8_t *decrypt_base64(uint8_t *msg) {
     uint32_t new_size = get_new_size(size, msg);
     uint32_t nb_block = get_nb_block(size);
     uint8_t *new_msg = malloc(new_size);
+
+    if(new_msg == NULL)
+        exit_error(MALLOC_ERROR);
     memset(new_msg, 0, new_size);
 
-    if(new_msg == NULL){
-        printf("Malloc error");
-        exit(EXIT_FAILURE);
-    }
     for (uint32_t i = 0; i < nb_block; ++i) {
         uint32_t rest = get_rest(i, nb_block, msg);
 
