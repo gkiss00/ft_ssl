@@ -62,7 +62,7 @@ void        ft_md5(int argc, char **argv, t_data *data)
     parsing_digest(argc, argv, data);
     if (data->opts_digest->p == 1 || data->node == NULL)
         get_stdin_input(data);
-    fill_data_contents(data);
+    fill_data_binary_contents(data);
     tmp = data->node;
     output_input(data);
     while(tmp) {

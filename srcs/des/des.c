@@ -325,7 +325,7 @@ void ft_des(int argc, char **argv, t_data *data) {
     parsing_cipher(argc, argv, data);
     if (data->node == NULL)
         get_stdin_input(data);
-    fill_data_contents_binary(data);
+    fill_data_binary_contents(data);
     pre_process(data);
 
     uint8_t *msg = (data->input) ? data->input : data->node->arg;

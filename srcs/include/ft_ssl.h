@@ -96,9 +96,7 @@ typedef struct              s_command
 }                           t_command;
 
 // PROGRAM
-void        fill_data_contents(t_data *data);
 void        hub(int argc, char **argv, t_data *data);
-void        end(t_data *data);
 
 // MD5
 void        ft_md5(int argc, char **argv, t_data *data);
@@ -118,7 +116,6 @@ void        ft_des(int argc, char **argv, t_data *data);
 void        pre_process(t_data *data);
 
 // GENRSA
-
 void        ft_genrsa(int argc, char **argv, t_data *data);
 
 // ERROR
@@ -137,10 +134,11 @@ uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 uint8_t     *str_to_hex(uint8_t str[16]);
 uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2);
 void        print_uint8(uint8_t *n);
-void        fill_data_contents_binary(t_data *data);
+void        fill_data_binary_contents(t_data *data);
 
 // PARSING
 void        get_stdin_input(t_data *data);
+void        add_arg(t_data *data, uint32_t type, uint8_t *arg, uint8_t *file_name);
 void        parsing_digest(int argc, char **argv, t_data *data);
 void        parsing_base64(int argc, char **argv, t_data *data);
 void        parsing_cipher(int argc, char **argv, t_data *data);

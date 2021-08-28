@@ -13,11 +13,6 @@ static void print_usage() {
     printf("\t-p <str> password\n");
 }
 
-static void addArg(t_data *data, uint32_t type, uint8_t *arg, uint8_t *file_name) {
-    t_node *node = new_node(type, arg, file_name);
-    node_add_back(&data->node, node);
-}
-
 static uint8_t *generate_salt(){
     uint8_t *salt;
     salt = calloc(8, 1);
@@ -166,7 +161,7 @@ void    parsing_cipher(int argc, char **argv, t_data *data) {
                 data->opts_cipher->mode = ENCRYPT;
                 break;
             case 'i':
-                addArg(data, FILE, NULL, (uint8_t*)optarg);
+                add_arg(data, FILE, NULL, (uint8_t*)optarg);
                 break;
             case 'o':
                 data->output_file = ft_strdup((uint8_t*)optarg);
@@ -192,6 +187,6 @@ void    parsing_cipher(int argc, char **argv, t_data *data) {
         }
     }
     for (i = optind + 1; i < argc; i++){
-        addArg(data, FILE, NULL, (uint8_t *)argv[i]);
+        add_arg(data, FILE, NULL, (uint8_t *)argv[i]);
     }
 }

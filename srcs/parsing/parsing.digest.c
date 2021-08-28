@@ -8,15 +8,9 @@ static void print_usage() {
     printf("\t-s <str> string\n");
 }
 
-static void addArg(t_data *data, uint32_t type, uint8_t *arg, uint8_t *file_name) {
-    t_node *node = new_node(type, arg, file_name);
-    node_add_back(&data->node, node);
-}
-
 void    parsing_digest(int argc, char **argv, t_data *data) {
     int i = 0;
     int ret = 0;
-    char    *str = NULL;
 
     while((ret = getopt(argc - 1, &argv[1], "qrps:")) != -1) {
         switch(ret){
@@ -31,8 +25,7 @@ void    parsing_digest(int argc, char **argv, t_data *data) {
                 break;
             case 's':
                 data->opts_digest->s = 1;
-                str = optarg;
-                addArg(data, STRING, (uint8_t *)str, NULL);
+                add_arg(data, STRING, (uint8_t *)optarg, NULL);
                 break;
             case '?':
                 print_usage();
@@ -43,6 +36,6 @@ void    parsing_digest(int argc, char **argv, t_data *data) {
         }
     }
     for (i = optind + 1; i < argc; i++){
-        addArg(data, FILE, NULL, (uint8_t *)argv[i]);
+        add_arg(data, FILE, NULL, (uint8_t *)argv[i]);
     }
 }

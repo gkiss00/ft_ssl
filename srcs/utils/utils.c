@@ -125,8 +125,7 @@ void print_uint8(uint8_t *n)
     int t = *n;
     for (int i = 0; i < 8; ++i)
     {
-        // printf("n = %u [%u]\n", n, pow(2, 7 - i));
-        if (t / pow(2, 7 - i) >= 1) // power for integers -> https://stackoverflow.com/questions/29787310/does-pow-work-for-int-data-type-in-c
+        if (t / pow(2, 7 - i) >= 1)
         {
             putchar('1');
             t -= pow(2, 7 - i);
@@ -146,6 +145,7 @@ static uint8_t find_char(uint8_t c, uint8_t str[16]) {
     return 16;
 }
 
+// return a binary key from a hex string
 uint8_t *str_to_hex(uint8_t str[16]) {
     uint8_t base[16] = "0123456789abcdef";
     uint8_t res[8];
@@ -165,4 +165,48 @@ uint8_t *str_to_hex(uint8_t str[16]) {
     uint8_t *ret = malloc(8);
     memcpy(ret, res, 8);
     return ret;
+}
+
+static uint8_t  *get_binary_content(int fd)
+{
+    int         ret;
+    int         size = 0;
+    uint8_t     buf[10];
+    uint8_t     *content;
+
+    ret = 0;
+    content = NULL;
+    while((ret = read(fd, buf, 9)) > 0)
+    {
+        buf[ret] = '\0';
+        content = ft_strjoin_2(content, buf, size, ret);
+        size += ret;
+    }
+    close(fd);
+    if(content == NULL)
+        return (uint8_t*)ft_strdup((uint8_t*)"");
+    return (content);
+}
+
+static uint8_t *get_fd_binary_content(uint8_t *path)
+{
+    int     fd;
+
+    fd = open((char*)path, O_RDONLY);
+    if (fd == -1)
+        return (NULL);
+    return (get_binary_content(fd));
+}
+
+// read the binary file and return his content
+void        fill_data_binary_contents(t_data *data)
+{
+    t_node *tmp = data->node;
+
+    while(tmp) {
+        if(tmp->type == FILE) {
+            tmp->arg = get_fd_binary_content(tmp->file_name);
+        }
+        tmp = tmp->next;
+    }
 }

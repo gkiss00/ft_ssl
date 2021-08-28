@@ -2,9 +2,7 @@ SRCS				= 	srcs/main/main.c \
 						srcs/utils/utils.c \
 						srcs/utils/opperand.c \
 						srcs/error/error.c \
-						srcs/program/begin.c \
 						srcs/program/hub.c \
-						srcs/program/end.c \
 						srcs/node/node.c \
 						srcs/parsing/parsing.c \
 						srcs/parsing/parsing.digest.c \
