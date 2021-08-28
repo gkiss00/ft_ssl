@@ -11,7 +11,7 @@ static void print_usage() {
 void    parsing_digest(int argc, char **argv, t_data *data) {
     int i = 0;
     int ret = 0;
-    data->opts_digest->hash = ft_strcmp(data->cmd, (uint8_t*)"md5") == 0 ? &hash_md5 : &hash_sha256;
+
     while((ret = getopt(argc - 1, &argv[1], "qrps:")) != -1) {
         switch(ret){
             case 'q':
@@ -38,4 +38,6 @@ void    parsing_digest(int argc, char **argv, t_data *data) {
     for (i = optind + 1; i < argc; i++){
         add_arg(data, FILE, NULL, (uint8_t *)argv[i]);
     }
+    if (data->opts_digest->p == 1 || data->node == NULL)
+        get_stdin_binary_input(data);
 }

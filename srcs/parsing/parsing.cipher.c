@@ -189,4 +189,6 @@ void    parsing_cipher(int argc, char **argv, t_data *data) {
     for (i = optind + 1; i < argc; i++){
         add_arg(data, FILE, NULL, (uint8_t *)argv[i]);
     }
+    if (data->node == NULL)
+        get_stdin_binary_input(data);
 }

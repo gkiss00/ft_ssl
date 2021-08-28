@@ -85,9 +85,8 @@ static void hash_chunk(uint8_t *chunk) {
 
 }
 
-void        hash_sha256(uint8_t *msg, uint8_t *hashed){
-    uint32_t len = strlen((char*)msg);
-    uint32_t nb_chunk = (len / 64) + 1 + ((len % 64) >= 56 ? 1 : 0);
+void        hash_sha256(uint8_t *msg, uint8_t *hashed, uint32_t size){
+    uint32_t nb_chunk = (size / 64) + 1 + ((size % 64) >= 56 ? 1 : 0);
     uint8_t chunk[nb_chunk * 64];
 
     preprocessing(msg, chunk);

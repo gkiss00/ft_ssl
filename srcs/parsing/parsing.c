@@ -5,18 +5,23 @@ void add_arg(t_data *data, uint32_t type, uint8_t *arg, uint8_t *file_name) {
     node_add_back(&data->node, node);
 }
 
-void get_stdin_input(t_data *data)
+void  get_stdin_binary_input(t_data *data)
 {
-    uint32_t    ret;
+    int         ret;
+    int         size = 0;
     uint8_t     buf[10];
-    uint8_t     *in;
+    uint8_t     *content;
 
     ret = 0;
-    in = NULL;
+    content = NULL;
     while((ret = read(0, buf, 9)) > 0)
     {
         buf[ret] = '\0';
-        in = ft_strjoin(in, buf);
+        content = ft_strjoin_2(content, buf, size, ret);
+        size += ret;
     }
-    data->input = in;
+    if(content == NULL)
+        content = (uint8_t*)ft_strdup((uint8_t*)"");
+    data->input = content;
+    data->input_size = size;
 }

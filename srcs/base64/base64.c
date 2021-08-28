@@ -53,8 +53,6 @@ static void ft_encrypt(t_data *data) {
 
 void        ft_base64(int argc, char **argv, t_data *data) {
     parsing_base64(argc, argv, data);
-    if (data->node == NULL)
-        get_stdin_input(data);
     fill_data_binary_contents(data);
 
     if(data->opts_base64->d == 1) {

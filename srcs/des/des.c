@@ -323,8 +323,6 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
 
 void ft_des(int argc, char **argv, t_data *data) {
     parsing_cipher(argc, argv, data);
-    if (data->node == NULL)
-        get_stdin_input(data);
     fill_data_binary_contents(data);
     pre_process(data);
 

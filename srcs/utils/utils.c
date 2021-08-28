@@ -72,7 +72,7 @@ uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2)
     return (str);
 }
 
-static uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2)
+uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2)
 {
     int i = 0;
     int j = 0;

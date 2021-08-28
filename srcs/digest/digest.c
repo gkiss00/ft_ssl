@@ -42,32 +42,30 @@ static void output(t_data *data, uint8_t *hashed, t_node *node, int size) {
     }
 }
 
-static void output_input(t_data *data, int size, void (*hash)(uint8_t *, uint8_t *)) {
+static void output_input(t_data *data, int size, void (*hash)(uint8_t *, uint8_t *, uint32_t)) {
     uint8_t     hashed[size];
     if(data->input) {
         if (data->opts_digest->p) {
             printf("%s", data->input);
         }
-        hash(data->input, hashed);
+        hash(data->input, hashed, ft_strlen(data->input));
         output_hash(hashed, size);
         printf("\n");
     }
 }
 
-static void        ft_digest(int argc, char **argv, t_data *data, int size, void (*hash)(uint8_t *, uint8_t *))
+static void        ft_digest(int argc, char **argv, t_data *data, int size, void (*hash)(uint8_t *, uint8_t *, uint32_t))
 {
     uint8_t     hashed[size];
     t_node *tmp;
 
     parsing_digest(argc, argv, data);
-    if (data->opts_digest->p == 1 || data->node == NULL)
-        get_stdin_input(data);
     fill_data_binary_contents(data);
     tmp = data->node;
     output_input(data, size, hash);
     while(tmp) {
         if(tmp->arg)
-            hash(tmp->arg, hashed);
+            hash(tmp->arg, hashed, tmp->file_size);
         output(data, hashed, tmp, size);
         tmp = tmp->next;
     }

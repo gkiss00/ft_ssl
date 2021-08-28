@@ -38,4 +38,6 @@ void    parsing_base64(int argc, char **argv, t_data *data) {
         add_arg(data, FILE, NULL, (uint8_t*)argv[i]);
         break;
     }
+    if (data->node == NULL)
+        get_stdin_binary_input(data);
 }
