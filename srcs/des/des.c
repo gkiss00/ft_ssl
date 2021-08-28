@@ -281,12 +281,8 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
         
 
         memcpy(block, &msg[i * 8], 8);
-        // printf("block : ");
-        // PRINT_UINT64(block);
-        // puts("");
         if(kind == CBC && mode == ENCRYPT)
             i == 0 ? xor(block, iv, 8) : xor(block, &msg[(i - 1) * 8], 8);
-
         permute(8, block, 8, block, block_permutation_table);
         memcpy(left_32_table[0], &block[0], 4);
         memcpy(right_32_table[0], &block[4], 4);
@@ -311,12 +307,6 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
         permute(8, final_block, 8, final_block, block_final_permutation_table);
         if(kind == CBC && mode == DECRYPT)
             i == 0 ? xor(final_block, iv, 8) : xor(final_block, &msg[(i - 1) * 8], 8);
-        // printf("final : ");
-        // PRINT_UINT64(final_block);
-        // printf("  ");
-        // fflush(stdout);
-        // write(1, final_block, 8);
-        // puts("");
         memcpy(&msg[i * 8], final_block, 8);
     }
 }
