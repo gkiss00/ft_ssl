@@ -215,3 +215,11 @@ void        fill_data_binary_contents(t_data *data)
         tmp = tmp->next;
     }
 }
+
+void redirect(uint8_t *path) {
+    if(path == NULL)
+        return;
+    int fd = open((char*)path, O_RDWR | O_CREAT,S_IRWXU | S_IRWXG | S_IRWXO);
+    dup2(fd, 1);
+    close(fd);
+}

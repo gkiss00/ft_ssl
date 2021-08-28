@@ -145,6 +145,7 @@ uint8_t     *str_to_hex(uint8_t str[16]);
 void        print_uint8(uint8_t *n);
 void        fill_data_binary_contents(t_data *data);
 uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2);
+void        redirect(uint8_t *path);
 
 // PARSING
 void        get_stdin_binary_input(t_data *data);

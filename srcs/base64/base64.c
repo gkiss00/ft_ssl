@@ -23,11 +23,7 @@ static void ft_decrypt(t_data *data) {
             code = decrypt_base64(first_line(data->node->arg));
         }
     }
-    if (data->output_file != NULL) {
-        int fd = open((char*)data->output_file, O_RDWR | O_CREAT,S_IRWXU | S_IRWXG | S_IRWXO);
-        dup2(fd, 1);
-        close(fd);
-    }
+    redirect(data->output_file);
     printf("%s", (char*)code);
 }
 
@@ -43,11 +39,7 @@ static void ft_encrypt(t_data *data) {
             code = encrypt_base64(data->node->arg, data->node->file_size);
         }
     }
-    if (data->output_file != NULL) {
-        int fd = open((char*)data->output_file, O_RDWR | O_CREAT,S_IRWXU | S_IRWXG | S_IRWXO);
-        dup2(fd, 1);
-        close(fd);
-    }
+    redirect(data->output_file);
     printf("%s\n", (char*)code);
 }
 

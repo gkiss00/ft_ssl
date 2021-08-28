@@ -1,3 +1,4 @@
+
 #########################################################
 #                                                       #
 #                        MD-5                           #
@@ -171,4 +172,60 @@ then
     test_base64_stdin_file_output 'foobar' 'output'
 
     rm -f output.mine output.true output2.mine output2.true
+fi
+
+#########################################################
+#                                                       #
+#                        DES                            #
+#                                                       #
+#########################################################
+
+test_des () {
+    
+    if ( diff <($1) <($2) )
+    then
+        echo -e "\033[0;32m[OK]\033[0m $2"
+    else
+        echo -e "\033[0;31m[ERROR]\033[0m $2"
+    fi
+}
+
+test_des_file_output () {
+
+    ./ft_ssl des-ecb -k $2 -i $1 -o output
+    
+    if ( diff <(cat $1) <(./ft_ssl des-ecb -d -k $2 -i output) )
+    then
+        echo -e "\033[0;32m[OK]\033[0m test_des_file_output $1"
+    else
+        echo -e "\033[0;31m[ERROR]\033[0m test_des_file_output $1"
+    fi
+    rm -f output
+}
+
+if [[ $1 == '' || $1 == 'des' ]]
+then
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i Makefile' 'openssl des-ecb -K ffffffffffffffff -in Makefile'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i README.md' 'openssl des-ecb -K ffffffffffffffff -in README.md'
+    test_des './ft_ssl des-ecb -k 0123456789abcdef -i Makefile' 'openssl des-ecb -K 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des-ecb -k 0123456789abcdef -i README.md' 'openssl des-ecb -K 0123456789abcdef -in README.md'
+    test_des './ft_ssl des-ecb -k fedcba9876543210 -i Makefile' 'openssl des-ecb -K fedcba9876543210 -in Makefile'
+    test_des './ft_ssl des-ecb -k fedcba9876543210 -i README.md' 'openssl des-ecb -K fedcba9876543210 -in README.md'
+
+    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i Makefile' 'openssl des-ecb -a -K ffffffffffffffff -in Makefile'
+    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i README.md' 'openssl des-ecb -a -K ffffffffffffffff -in README.md'
+    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i main.c' 'openssl des-ecb -a -K ffffffffffffffff -in main.c'
+    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i ft_ssl.h' 'openssl des-ecb -a -K ffffffffffffffff -in ft_ssl.h'
+
+    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i Makefile' 'openssl des-ecb -a -K 0123456789abcdef -in Makefile'
+    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i README.md' 'openssl des-ecb -a -K 0123456789abcdef -in README.md'
+    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i main.c' 'openssl des-ecb -a -K 0123456789abcdef -in main.c'
+    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i ft_ssl.h' 'openssl des-ecb -a -K 0123456789abcdef -in ft_ssl.h'
+
+    test_des_file_output Makefile ffffffffffffffff
+    test_des_file_output README.md ffffffffffffffff
+    test_des_file_output Makefile 0123456789abcdef
+    test_des_file_output README.md 0123456789abcdef
+    test_des_file_output Makefile fedcba9876543210
+    test_des_file_output README.md fedcba9876543210
 fi

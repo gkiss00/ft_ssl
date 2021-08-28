@@ -1,7 +1,5 @@
 #include "./../include/ft_ssl.h"
 
-static uint32_t get_new_size(uint32_t size, uint8_t *msg);
-
 static int key_permutation_table1[56] = {
     57, 49, 41, 33, 25, 17,  9,
      1, 58, 50, 42, 34, 26, 18,
@@ -127,20 +125,8 @@ static uint8_t s_box_table[8][4][16] = {
     }
 };
 
-static uint32_t get_nb_block(uint8_t *msg) {
-    uint32_t size;
-    uint32_t nb_block;
-
-    size = ft_strlen(msg);
-    nb_block = (size / 8) + (size % 8 == 0 ? 0 : 1);
-    return nb_block;
-}
-
-static uint32_t get_nb_block_from_size(uint32_t size) {
-    uint32_t nb_block;
-
-    nb_block = (size / 8) + (size % 8 == 0 ? 0 : 1);
-    return nb_block;
+static uint32_t get_nb_block(uint32_t size) {
+    return (uint32_t)((size / 8) + (size % 8 == 0 ? 0 : 1));
 }
 
 static void xor(uint8_t *ptr1, uint8_t *ptr2, int size) {
@@ -311,52 +297,26 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
     }
 }
 
+uint32_t remove_extra_bytes(uint8_t *msg, uint32_t size) {
+    uint8_t extra = msg[size - 1];
+    memset(&msg[size - extra], 0, extra);
+    return size - extra;
+}
+
 void ft_des(int argc, char **argv, t_data *data) {
     parsing_cipher(argc, argv, data);
     fill_data_binary_contents(data);
     pre_process(data);
+    redirect(data->output_file);
 
     uint8_t *msg = (data->input) ? data->input : data->node->arg;
-    int nb_block;
-
-    // decode base64
-    if(data->opts_cipher->a == 1 && data->opts_cipher->mode == ENCRYPT) {
-        uint32_t new_size = get_new_size(ft_strlen(msg), msg);
-        msg = decrypt_base64(msg);
-        nb_block = (int)get_nb_block_from_size(new_size);
-    } else {
-        nb_block = (data->input) ? (int)get_nb_block(data->input) : (int)get_nb_block_from_size(data->node->file_size);
-    }
+    int nb_block = (data->input) ? (int)get_nb_block(data->input_size) : (int)get_nb_block(data->node->file_size);
 
     ft_encrypt(msg, data->opts_cipher->key, nb_block, data->opts_cipher->vector, data->opts_cipher->mode, data->opts_cipher->kind);
-    
-    // encode base64
-    if(data->opts_cipher->a == 1 && data->opts_cipher->mode == ENCRYPT) {
-        msg = encrypt_base64(msg, nb_block * 8);
-        write(1, msg, (int)ft_strlen(msg));
+    if(data->opts_cipher->mode == DECRYPT) {
+        uint32_t size = remove_extra_bytes(msg, nb_block * 8);
+        write(1, msg, size);
+    } else if(data->opts_cipher->mode == ENCRYPT){
+        write(1, msg, nb_block * 8);
     }
-    write(1, msg, nb_block * 8);
-}
-
-static uint32_t get_rest1(uint8_t *msg) {
-    uint32_t size = ft_strlen(msg);
-    uint32_t rest = 0;
-    for (uint32_t i = size -1; i >= 0; --i){
-        if (msg[i] == '=')
-            ++rest;
-        else
-            break;
-    }
-    return rest;
-}
-
-static uint32_t get_new_size(uint32_t size, uint8_t *msg) {
-    uint32_t rest = get_rest1(msg);
-    uint32_t new_size = 0;
-    new_size = (size / 4) * 3;
-    if(rest == 1)
-        --size;
-    if (rest == 2)
-        size -= 2;
-    return new_size + 1;
 }
