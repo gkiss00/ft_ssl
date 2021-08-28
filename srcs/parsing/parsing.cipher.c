@@ -87,6 +87,7 @@ void pre_process(t_data *data){
         if(data->node) {
             if(data->node->arg) {
                 data->node->arg = add_extra_bytes(data->node->arg, (uint32_t)data->node->file_size);
+                data->node->file_size = data->node->file_size + (8 - (data->node->file_size % 8));
             }
         } else {
             if(data->input) {
