@@ -1,4 +1,4 @@
-SRCS				= 	srcs/main/main.c \
+SRCS				= 	srcs/program/main.c \
 						srcs/utils/utils.c \
 						srcs/utils/opperand.c \
 						srcs/error/error.c \
@@ -9,10 +9,9 @@ SRCS				= 	srcs/main/main.c \
 						srcs/parsing/parsing.base64.c \
 						srcs/parsing/parsing.cipher.c \
 						srcs/parsing/parsing.genrsa.c \
-						srcs/md5/md5.c \
-						srcs/md5/hash.c \
-						srcs/sha256/sha256.c \
-						srcs/sha256/hash.c \
+						srcs/digest/digest.c \
+						srcs/digest/md5.c \
+						srcs/digest/sha256.c \
 						srcs/base64/base64.c \
 						srcs/base64/encrypt.c \
 						srcs/base64/decrypt.c \

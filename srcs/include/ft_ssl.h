@@ -24,6 +24,8 @@
 #define ENCRYPT 1
 #define DECRYPT 2
 
+#define MALLOC_ERROR "Malloc error, exit"
+
 #define BIT(n, k) (n >> k) & 1
 #define CIRCULAR_SHIFT_28(n, k) ((n << k + 4) >> 4) | (n >> (28 - k))
 
@@ -41,12 +43,19 @@
 
 #define XOR(n, k) (n ^ k)
 
+typedef struct              s_bin
+{
+    uint8_t                *binary;
+    uint32_t                size;
+}                           t_bin;
+
 typedef struct              s_option_digest
 {
     uint32_t                p; // stdin
     uint32_t                q; // quiet
     uint32_t                r; // reverse
     uint32_t                s; // string
+    void                    (*hash)(uint8_t *msg, uint8_t *hashed);
 }                           t_option_digest;
 
 typedef struct              s_option_base64
@@ -124,6 +133,7 @@ void        check_error_base64(int argc, char **argv);
 void        print_usage_error(char **argv);
 
 // UTILS
+void        exit_error(char *error);
 uint32_t    ft_strlen(uint8_t *str);
 uint32_t    ft_strcmp(uint8_t *s1, uint8_t *s2);
 uint8_t     *ft_strdup(uint8_t *s1);
@@ -132,7 +142,6 @@ uint8_t     *first_line(uint8_t *temp);
 char        *to_upper(char * temp);
 uint8_t		**add_to_tab(uint8_t **tab, uint8_t *str);
 uint8_t     *str_to_hex(uint8_t str[16]);
-uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2);
 void        print_uint8(uint8_t *n);
 void        fill_data_binary_contents(t_data *data);
 
@@ -149,6 +158,9 @@ uint64_t    small_to_big_endian_64(uint64_t n);
 uint32_t    big_to_small_endian_32(uint32_t n);
 uint32_t    left_rotate_32(uint32_t value, unsigned int count);
 uint32_t    right_rotate_32(uint32_t value, unsigned int count);
+
+// BIN
+t_bin       *new_bin(uint8_t *binary, uint32_t size);
 
 // NODE
 t_node      *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name);

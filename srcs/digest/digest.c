@@ -10,9 +10,9 @@ static void output_hash(uint8_t *hashed, uint32_t size) {
     }
 }
 
-static void output_normal(t_data *data, uint8_t *hashed, t_node *node) {
+static void output_normal(t_data *data, uint8_t *hashed, t_node *node, int size) {
     if (data->opts_digest->q == 1) {
-        output_hash(hashed, 32);    
+        output_hash(hashed, size);    
     } else {
         if (data->opts_digest->r == 0) {
             if(node->type == STRING) {
@@ -20,10 +20,10 @@ static void output_normal(t_data *data, uint8_t *hashed, t_node *node) {
             } else if (node->type == FILE) {
                 printf("%s (%s) = ", data->uppercase_cmd, node->file_name);
             }
-            output_hash(hashed, 32);
+            output_hash(hashed, size);
             
         } else {
-            output_hash(hashed, 32);
+            output_hash(hashed, size);
             if(node->type == STRING) {
                 printf(" \"%s\"", node->arg);
             } else if (node->type == FILE) {
@@ -34,29 +34,29 @@ static void output_normal(t_data *data, uint8_t *hashed, t_node *node) {
     printf("\n");
 }
 
-static void output(t_data *data, uint8_t *hashed, t_node *node) {
+static void output(t_data *data, uint8_t *hashed, t_node *node, int size) {
     if(node->arg == NULL) {
         output_error(data, node);
     } else {
-        output_normal(data, hashed, node);
+        output_normal(data, hashed, node, size);
     }
 }
 
-static void output_input(t_data *data) {
-    uint8_t     hashed[32];
+static void output_input(t_data *data, int size, void (*hash)(uint8_t *, uint8_t *)) {
+    uint8_t     hashed[size];
     if(data->input) {
         if (data->opts_digest->p) {
             printf("%s", data->input);
         }
-        hash_sha256(data->input, hashed);
-        output_hash(hashed, 32);
+        hash(data->input, hashed);
+        output_hash(hashed, size);
         printf("\n");
     }
 }
 
-void        ft_sha256(int argc, char **argv, t_data *data)
+static void        ft_digest(int argc, char **argv, t_data *data, int size, void (*hash)(uint8_t *, uint8_t *))
 {
-    uint8_t     hashed[32];
+    uint8_t     hashed[size];
     t_node *tmp;
 
     parsing_digest(argc, argv, data);
@@ -64,11 +64,19 @@ void        ft_sha256(int argc, char **argv, t_data *data)
         get_stdin_input(data);
     fill_data_binary_contents(data);
     tmp = data->node;
-    output_input(data);
+    output_input(data, size, hash);
     while(tmp) {
         if(tmp->arg)
-            hash_sha256(tmp->arg, hashed);
-        output(data, hashed, tmp);
+            hash(tmp->arg, hashed);
+        output(data, hashed, tmp, size);
         tmp = tmp->next;
     }
+}
+
+void        ft_sha256(int argc, char **argv, t_data *data) {
+    ft_digest(argc, argv, data, 32, &hash_sha256);
+}
+
+void        ft_md5(int argc, char **argv, t_data *data) {
+    ft_digest(argc, argv, data, 16, &hash_md5);
 }

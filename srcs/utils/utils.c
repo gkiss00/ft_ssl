@@ -1,5 +1,10 @@
 #include "./../include/ft_ssl.h"
 
+void exit_error(char *error){
+    fprintf(stderr, "%s\n", error);
+    exit(EXIT_FAILURE);
+}
+
 uint32_t    ft_strlen(uint8_t *str)
 {
     uint32_t i;
@@ -67,7 +72,7 @@ uint8_t     *ft_strjoin(uint8_t *s1, uint8_t *s2)
     return (str);
 }
 
-uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2)
+static uint8_t     *ft_strjoin_2(uint8_t *s1, uint8_t *s2, int size1, int size2)
 {
     int i = 0;
     int j = 0;
