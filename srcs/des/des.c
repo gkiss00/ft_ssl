@@ -1,5 +1,7 @@
 #include "./../include/ft_ssl.h"
 
+static uint32_t get_new_size(uint32_t size, uint8_t *msg);
+
 static int key_permutation_table1[56] = {
     57, 49, 41, 33, 25, 17,  9,
      1, 58, 50, 42, 34, 26, 18,
@@ -255,8 +257,10 @@ static void get_keys(
     }
 }
 
-static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv[8], int mode, int kind) {
+static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv[8], int mode, int kind, int size) {
     uint8_t key_48_table[16][6];
+    uint8_t *cpy = calloc(size + 1, 1);
+    memcpy(cpy, msg, size);
 
     get_keys(key_64, key_48_table);
 
@@ -292,7 +296,7 @@ static void ft_encrypt(uint8_t *msg, uint8_t key_64[8], int nb_block, uint8_t iv
         memcpy(&final_block[4], &left_32_table[16], 4);
         permute(8, final_block, 8, final_block, block_final_permutation_table);
         if(kind == CBC && mode == DECRYPT)
-            i == 0 ? xor(final_block, iv, 8) : xor(final_block, &msg[(i - 1) * 8], 8);
+            i == 0 ? xor(final_block, iv, 8) : xor(final_block, &cpy[(i - 1) * 8], 8);
         memcpy(&msg[i * 8], final_block, 8);
     }
 }
@@ -301,6 +305,24 @@ uint32_t remove_extra_bytes(uint8_t *msg, uint32_t size) {
     uint8_t extra = msg[size - 1];
     memset(&msg[size - extra], 0, extra);
     return size - extra;
+}
+
+uint8_t *remove_line(uint8_t *msg, uint32_t size) {
+    uint32_t count = 0;
+
+    for(uint32_t i = 0; i < size; ++i) {
+        if (msg[i] == '\n')
+            ++count;
+    }
+    uint8_t *res = calloc(size - count + 1, 1);
+    uint32_t j = 0;
+    for(uint32_t i = 0; i < size; ++i) {
+        if (msg[i] != '\n') {
+            res[j] = msg[i];
+            ++j;
+        }
+    }
+    return res;
 }
 
 void ft_des(int argc, char **argv, t_data *data) {
@@ -312,11 +334,62 @@ void ft_des(int argc, char **argv, t_data *data) {
     uint8_t *msg = (data->input) ? data->input : data->node->arg;
     int nb_block = (data->input) ? (int)get_nb_block(data->input_size) : (int)get_nb_block(data->node->file_size);
 
-    ft_encrypt(msg, data->opts_cipher->key, nb_block, data->opts_cipher->vector, data->opts_cipher->mode, data->opts_cipher->kind);
-    if(data->opts_cipher->mode == DECRYPT) {
-        uint32_t size = remove_extra_bytes(msg, nb_block * 8);
-        write(1, msg, size);
-    } else if(data->opts_cipher->mode == ENCRYPT){
-        write(1, msg, nb_block * 8);
+    if(data->opts_cipher->a == 0) {
+        ft_encrypt(msg, data->opts_cipher->key, nb_block, data->opts_cipher->vector, data->opts_cipher->mode, data->opts_cipher->kind, nb_block * 8);
+        if(data->opts_cipher->mode == DECRYPT) {
+            uint32_t size = remove_extra_bytes(msg, nb_block * 8);
+            write(1, msg, size);
+        } else if(data->opts_cipher->mode == ENCRYPT){
+            write(1, msg, nb_block * 8);
+        }
+    } else {
+        // HERE WE GO
+        if(data->opts_cipher->mode == ENCRYPT) {
+            ft_encrypt(msg, data->opts_cipher->key, nb_block, data->opts_cipher->vector, data->opts_cipher->mode, data->opts_cipher->kind, nb_block * 8);
+            uint8_t *base64 = encrypt_base64(msg, nb_block * 8);
+            uint32_t size = ft_strlen(base64);
+            uint32_t nb_line = size / 64 + (size % 64 != 0 ? 1 : 0);
+            for(uint32_t i = 0; i < nb_line; ++i){
+                if(i != nb_line - 1){
+                    write(1, &base64[i * 64], 64);    
+                } else {
+                    write(1, &base64[i * 64], (size % 64 == 0 ? 64 : size % 64));
+                }
+                write(1, "\n", 1);
+            }
+        }
+        if(data->opts_cipher->mode == DECRYPT) {
+            uint32_t new_size;
+            msg = remove_line(msg, ft_strlen(msg));
+            new_size = get_new_size(ft_strlen(msg), msg);
+            msg = decrypt_base64(msg);
+            nb_block = (int)get_nb_block(new_size);
+            ft_encrypt(msg, data->opts_cipher->key, nb_block, data->opts_cipher->vector, data->opts_cipher->mode, data->opts_cipher->kind, new_size);
+            new_size = remove_extra_bytes(msg, new_size);
+            write(1, msg, new_size);
+        }
     }
+}
+
+static uint32_t get_rest1(uint8_t *msg) {
+    uint32_t size = ft_strlen(msg);
+    uint32_t rest = 0;
+    for (uint32_t i = size -1; i >= 0; --i){
+        if (msg[i] == '=')
+            ++rest;
+        else
+            break;
+    }
+    return rest;
+}
+
+static uint32_t get_new_size(uint32_t size, uint8_t *msg) {
+    uint32_t rest = get_rest1(msg);
+    uint32_t new_size = 0;
+    new_size = (size / 4) * 3;
+    if(rest == 1)
+        --new_size;
+    if (rest == 2)
+        new_size -= 2;
+    return new_size;
 }

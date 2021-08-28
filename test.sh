@@ -42,17 +42,12 @@ then
     test_md5_stdin 'hello' '-p Makefile'
     test_md5_stdin 'hello' '-q'
     test_md5_stdin 'hello' '-r'
-    test_md5_stdin 'hello' '-pq'
-    test_md5_stdin 'hello' '-pr'
     test_md5_stdin 'hello' '-qr'
-    test_md5_stdin 'hello' '-pqr'
     test_md5_stdin 'hello' '-p -s hello'
     test_md5_stdin 'hello' '-pq -s hello'
     test_md5_stdin 'hello' '-pr -s hello'
     test_md5_stdin 'hello' '-pqr -s hello'
     test_md5_stdin 'hello' '-pqr -s hello Makefile'
-
-    test_md5 '**/*.c Makefile'
 fi
 
 #########################################################
@@ -81,16 +76,16 @@ test_sha256_stdin () {
     fi
 }
 
-if [[ $1 == '' || $1 == 'sha256' ]]
-then
-    test_sha256_stdin 'hello Makefile'
-    test_sha256_stdin '1234567890123456789012345678901234567890123456789012345'
-    test_sha256_stdin '12345678901234567890123456789012345678901234567890123456'
-    test_sha256_stdin '1234567890123456789012345678901234567890123456789012345678901234'
-    test_sha256_stdin '12345678901234567890123456789012345678901234567890123456789012345'
+# if [[ $1 == '' || $1 == 'sha256' ]]
+# then
+#     test_sha256_stdin 'hello Makefile'
+#     test_sha256_stdin '1234567890123456789012345678901234567890123456789012345'
+#     test_sha256_stdin '12345678901234567890123456789012345678901234567890123456'
+#     test_sha256_stdin '1234567890123456789012345678901234567890123456789012345678901234'
+#     test_sha256_stdin '12345678901234567890123456789012345678901234567890123456789012345'
 
-    test_sha256 '**/*.c Makefile'
-fi
+#     test_sha256 '**/*.c Makefile'
+# fi
 
 #########################################################
 #                                                       #
@@ -159,16 +154,21 @@ then
     test_base64_stdin 'foobar'
     test_base64_stdin 'Zm9vYmFyCg==' '-d'
     test_base64_stdin 'Zm9vYmFy' '-d'
-    test_base64_stdin '' '-d'
+    # test_base64_stdin '' '-d'
 
     test_base64 '-i Makefile'
     test_base64 '-i README.md'
-    test_base64 '-i main.c'
 
     test_base64_file_output 'output' '-i Makefile'
     test_base64_file_output 'output2' '-i output.true -d'
+
+    rm -f output.mine output.true output2.mine output2.true
     test_base64_stdin_file_output 'Zm9vYmFyCg==' 'output' '-d'
+
+    rm -f output.mine output.true
     test_base64_stdin_file_output 'Zm9vYmFy' 'output' '-d'
+
+    rm -f output.mine output.true
     test_base64_stdin_file_output 'foobar' 'output'
 
     rm -f output.mine output.true output2.mine output2.true
@@ -239,15 +239,26 @@ then
     test_des './ft_ssl des-cbc -k fedcba9876543210 -v 0123456789abcdef -i Makefile' 'openssl des-cbc -K fedcba9876543210 -iv 0123456789abcdef -in Makefile'
     test_des './ft_ssl des-cbc -k fedcba9876543210 -v 0123456789abcdef -i README.md' 'openssl des-cbc -K fedcba9876543210 -iv 0123456789abcdef -in README.md'
 
-    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i Makefile' 'openssl des-ecb -a -K ffffffffffffffff -in Makefile'
-    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i README.md' 'openssl des-ecb -a -K ffffffffffffffff -in README.md'
-    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i main.c' 'openssl des-ecb -a -K ffffffffffffffff -in main.c'
-    # test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i ft_ssl.h' 'openssl des-ecb -a -K ffffffffffffffff -in ft_ssl.h'
+    test_des './ft_ssl des -a -k ffffffffffffffff -v 0123456789abcdef -i Makefile' 'openssl des -a -K ffffffffffffffff -iv 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des -a -k ffffffffffffffff -v 0123456789abcdef -i README.md' 'openssl des -a -K ffffffffffffffff -iv 0123456789abcdef -in README.md'
+    test_des './ft_ssl des -a -k 0123456789abcdef -v 0123456789abcdef -i Makefile' 'openssl des -a -K 0123456789abcdef -iv 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des -a -k 0123456789abcdef -v 0123456789abcdef -i README.md' 'openssl des -a -K 0123456789abcdef -iv 0123456789abcdef -in README.md'
+    test_des './ft_ssl des -a -k fedcba9876543210 -v 0123456789abcdef -i Makefile' 'openssl des -a -K fedcba9876543210 -iv 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des -a -k fedcba9876543210 -v 0123456789abcdef -i README.md' 'openssl des -a -K fedcba9876543210 -iv 0123456789abcdef -in README.md'
 
-    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i Makefile' 'openssl des-ecb -a -K 0123456789abcdef -in Makefile'
-    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i README.md' 'openssl des-ecb -a -K 0123456789abcdef -in README.md'
-    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i main.c' 'openssl des-ecb -a -K 0123456789abcdef -in main.c'
-    # test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i ft_ssl.h' 'openssl des-ecb -a -K 0123456789abcdef -in ft_ssl.h'
+    test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i Makefile' 'openssl des-ecb -a -K ffffffffffffffff -in Makefile'
+    test_des './ft_ssl des-ecb -a -k ffffffffffffffff -i README.md' 'openssl des-ecb -a -K ffffffffffffffff -in README.md'
+    test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i Makefile' 'openssl des-ecb -a -K 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des-ecb -a -k 0123456789abcdef -i README.md' 'openssl des-ecb -a -K 0123456789abcdef -in README.md'
+    test_des './ft_ssl des-ecb -a -k fedcba9876543210 -i Makefile' 'openssl des-ecb -a -K fedcba9876543210 -in Makefile'
+    test_des './ft_ssl des-ecb -a -k fedcba9876543210 -i README.md' 'openssl des-ecb -a -K fedcba9876543210 -in README.md'
+
+    test_des './ft_ssl des-cbc -a -k ffffffffffffffff -v 0123456789abcdef -i Makefile' 'openssl des-cbc -a -K ffffffffffffffff -iv 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des-cbc -a -k ffffffffffffffff -v 0123456789abcdef -i README.md' 'openssl des-cbc -a -K ffffffffffffffff -iv 0123456789abcdef -in README.md'
+    test_des './ft_ssl des-cbc -a -k 0123456789abcdef -v 0123456789abcdef -i Makefile' 'openssl des-cbc -a -K 0123456789abcdef -iv 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des-cbc -a -k 0123456789abcdef -v 0123456789abcdef -i README.md' 'openssl des-cbc -a -K 0123456789abcdef -iv 0123456789abcdef -in README.md'
+    test_des './ft_ssl des-cbc -a -k fedcba9876543210 -v 0123456789abcdef -i Makefile' 'openssl des-cbc -a -K fedcba9876543210 -iv 0123456789abcdef -in Makefile'
+    test_des './ft_ssl des-cbc -a -k fedcba9876543210 -v 0123456789abcdef -i README.md' 'openssl des-cbc -a -K fedcba9876543210 -iv 0123456789abcdef -in README.md'
 
     test_des_ecb_decrypt Makefile ffffffffffffffff
     test_des_ecb_decrypt README.md ffffffffffffffff
@@ -256,17 +267,17 @@ then
     test_des_ecb_decrypt Makefile fedcba9876543210
     test_des_ecb_decrypt README.md fedcba9876543210
 
-    # test_des_cbc_decrypt Makefile ffffffffffffffff ffffffffffffffff des
-    # test_des_cbc_decrypt README.md ffffffffffffffff ffffffffffffffff des
-    # test_des_cbc_decrypt Makefile 0123456789abcdef 0123456789abcdef des
-    # test_des_cbc_decrypt README.md 0123456789abcdef 0123456789abcdef des
-    # test_des_cbc_decrypt Makefile fedcba9876543210 fedcba9876543210 des
-    # test_des_cbc_decrypt README.md fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt Makefile ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt README.md ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt Makefile 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt README.md 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt Makefile fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt README.md fedcba9876543210 fedcba9876543210 des
 
-    # test_des_cbc_decrypt Makefile ffffffffffffffff ffffffffffffffff des-cbc
-    # test_des_cbc_decrypt README.md ffffffffffffffff ffffffffffffffff des-cbc
-    # test_des_cbc_decrypt Makefile 0123456789abcdef 0123456789abcdef des-cbc
-    # test_des_cbc_decrypt README.md 0123456789abcdef 0123456789abcdef des-cbc
-    # test_des_cbc_decrypt Makefile fedcba9876543210 fedcba9876543210 des-cbc
-    # test_des_cbc_decrypt README.md fedcba9876543210 fedcba9876543210 des-cbc
+    test_des_cbc_decrypt Makefile ffffffffffffffff ffffffffffffffff des-cbc
+    test_des_cbc_decrypt README.md ffffffffffffffff ffffffffffffffff des-cbc
+    test_des_cbc_decrypt Makefile 0123456789abcdef 0123456789abcdef des-cbc
+    test_des_cbc_decrypt README.md 0123456789abcdef 0123456789abcdef des-cbc
+    test_des_cbc_decrypt Makefile fedcba9876543210 fedcba9876543210 des-cbc
+    test_des_cbc_decrypt README.md fedcba9876543210 fedcba9876543210 des-cbc
 fi

@@ -32,6 +32,8 @@ t_node *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name) {
     node->file_name = file_name ? (uint8_t*)strdup((char*)file_name): NULL;
     if(type == FILE)
         set_size(node);
+    if(type == STRING)
+        node->file_size = ft_strlen(arg);
     node->next = NULL;
     return (node);
 }
