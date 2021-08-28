@@ -11,6 +11,16 @@ t_bin *new_bin(uint8_t *binary, uint32_t size) {
     return (bin);
 }
 
+static void set_size(t_node *node) {
+    int fd = open((char*)node->file_name, O_RDONLY);
+    if(fd < 0)
+        return;
+    close(fd);
+    struct stat file_info;
+    stat((char*)node->file_name, &file_info);
+    node->file_size = (uint32_t)file_info.st_size;
+}
+
 t_node *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name) {
     t_node *node;
 
@@ -20,9 +30,8 @@ t_node *new_node(uint32_t type, uint8_t *arg, uint8_t *file_name) {
     node->type = type;
     node->arg = arg ? (uint8_t*)strdup((char*)arg): NULL;
     node->file_name = file_name ? (uint8_t*)strdup((char*)file_name): NULL;
-    struct stat file_info;
-    stat((char*)file_name, &file_info);
-    node->file_size = (uint32_t)file_info.st_size;
+    if(type == FILE)
+        set_size(node);
     node->next = NULL;
     return (node);
 }

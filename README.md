@@ -1,6 +1,6 @@
 # ft_ssl
 
-## MD5 && SHA256
+## MD5 & SHA256
 
 ### Options
 
@@ -18,7 +18,7 @@
 * -i, input file
 * -o, output file
 
-## DES DES-ECB DES_CBC
+## DES & DES-ECB & DES-CBC
 
 ### Options
 
