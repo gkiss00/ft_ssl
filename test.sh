@@ -196,9 +196,9 @@ test_des_ecb_decrypt () {
     
     if ( diff <(cat $1) <(./ft_ssl des-ecb -d -k $2 -i output) )
     then
-        echo -e "\033[0;32m[OK]\033[0m test_des-ecb_decrypt $1"
+        echo -e "\033[0;32m[OK]\033[0m des-ecb decrypt file <$1> key <$2>"
     else
-        echo -e "\033[0;31m[ERROR]\033[0m test_des-ecb_decrypt $1"
+        echo -e "\033[0;31m[ERROR]\033[0m des-ecb decrypt file <$1> key <$2>"
     fi
     rm -f output
 }
@@ -209,15 +209,73 @@ test_des_cbc_decrypt () {
     
     if ( diff <(cat $1) <(./ft_ssl $4 -d -k $2 -v $3 -i output) )
     then
-        echo -e "\033[0;32m[OK]\033[0m test_$4_decrypt $1"
+        echo -e "\033[0;32m[OK]\033[0m $4 decrypt file <$1> key <$2> vector <$3>"
     else
-        echo -e "\033[0;31m[ERROR]\033[0m test_$4_file_output $1"
+        echo -e "\033[0;31m[ERROR]\033[0m $4 decrypt file <$1> key <$2> vector <$3>"
+    fi
+    rm -f output
+}
+
+test_des_ecb_decrypt_a () {
+
+    ./ft_ssl des-ecb -k $2 -i $1 -o output -a
+    
+    if ( diff <(cat $1) <(./ft_ssl des-ecb -d -k $2 -i output -a) )
+    then
+        echo -e "\033[0;32m[OK]\033[0m des-ecb decrypt -a file <$1> key <$2>"
+    else
+        echo -e "\033[0;31m[ERROR]\033[0m des-ecb decrypt -a file <$1> key <$2>"
+    fi
+    rm -f output
+}
+
+test_des_cbc_decrypt_a () {
+
+    ./ft_ssl $4 -k $2 -v $3 -i $1 -o output -a
+    
+    if ( diff <(cat $1) <(./ft_ssl $4 -d -k $2 -v $3 -i output -a) )
+    then
+        echo -e "\033[0;32m[OK]\033[0m $4 decrypt -a file <$1> key <$2> vector <$3>"
+    else
+        echo -e "\033[0;31m[ERROR]\033[0m $4 decrypt -a file <$1> key <$2> vector <$3>"
     fi
     rm -f output
 }
 
 if [[ $1 == '' || $1 == 'des' ]]
 then
+    # Simple encryption tests on files with size from 0 -> 8
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_0' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_0'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_1' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_1'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_2' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_2'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_3' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_3'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_4' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_4'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_5' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_5'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_6' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_6'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_7' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_7'
+    test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i ./tests/file_size_8' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in ./tests/file_size_8'
+
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_0' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_0'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_1' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_1'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_2' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_2'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_3' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_3'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_4' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_4'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_5' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_5'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_6' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_6'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_7' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_7'
+    test_des './ft_ssl des-ecb -k ffffffffffffffff -i ./tests/file_size_8' 'openssl des-ecb -K ffffffffffffffff -in ./tests/file_size_8'
+
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_0' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_0'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_1' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_1'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_2' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_2'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_3' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_3'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_4' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_4'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_5' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_5'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_6' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_6'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_7' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_7'
+    test_des './ft_ssl des-cbc -k f1f2fadf589cf403 -v 0123456789abcdef -i ./tests/file_size_8' 'openssl des-cbc -K f1f2fadf589cf403 -iv 0123456789abcdef -in ./tests/file_size_8'
+
+    # Simple encryption tests on big files
     test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i Makefile' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in Makefile'
     test_des './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef -i README.md' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef -in README.md'
     test_des './ft_ssl des -k 0123456789abcdef -v 0123456789abcdef -i Makefile' 'openssl des -K 0123456789abcdef -iv 0123456789abcdef -in Makefile'
@@ -239,6 +297,38 @@ then
     test_des './ft_ssl des-cbc -k fedcba9876543210 -v 0123456789abcdef -i Makefile' 'openssl des-cbc -K fedcba9876543210 -iv 0123456789abcdef -in Makefile'
     test_des './ft_ssl des-cbc -k fedcba9876543210 -v 0123456789abcdef -i README.md' 'openssl des-cbc -K fedcba9876543210 -iv 0123456789abcdef -in README.md'
 
+    # Simple encryption tests on files with size from 0 -> 8 with -a option
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_0 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_0 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_1 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_1 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_2 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_2 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_3 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_3 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_4 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_4 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_5 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_5 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_6 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_6 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_7 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_7 -a'
+    test_des './ft_ssl des -k 5874693201547864 -v a58e69dfc4c9a8ff -i ./tests/file_size_8 -a' 'openssl des -K 5874693201547864 -iv a58e69dfc4c9a8ff -in ./tests/file_size_8 -a'
+
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_0' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_0'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_1' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_1'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_2' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_2'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_3' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_3'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_4' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_4'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_5' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_5'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_6' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_6'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_7' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_7'
+    test_des './ft_ssl des-ecb -a -k 5874693201547864 -i ./tests/file_size_8' 'openssl des-ecb -K 5874693201547864 -a -in ./tests/file_size_8'
+
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_0' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_0'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_1' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_1'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_2' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_2'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_3' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_3'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_4' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_4'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_5' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_5'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_6' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_6'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_7' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_7'
+    test_des './ft_ssl des-cbc -a -k f1f2fadf589cf403 -v 5874693201547864 -i ./tests/file_size_8' 'openssl des-cbc -a -K f1f2fadf589cf403 -iv 5874693201547864 -in ./tests/file_size_8'
+
+    # Simple encryption tests on big files with -a option
     test_des './ft_ssl des -a -k ffffffffffffffff -v 0123456789abcdef -i Makefile' 'openssl des -a -K ffffffffffffffff -iv 0123456789abcdef -in Makefile'
     test_des './ft_ssl des -a -k ffffffffffffffff -v 0123456789abcdef -i README.md' 'openssl des -a -K ffffffffffffffff -iv 0123456789abcdef -in README.md'
     test_des './ft_ssl des -a -k 0123456789abcdef -v 0123456789abcdef -i Makefile' 'openssl des -a -K 0123456789abcdef -iv 0123456789abcdef -in Makefile'
@@ -260,6 +350,134 @@ then
     test_des './ft_ssl des-cbc -a -k fedcba9876543210 -v 0123456789abcdef -i Makefile' 'openssl des-cbc -a -K fedcba9876543210 -iv 0123456789abcdef -in Makefile'
     test_des './ft_ssl des-cbc -a -k fedcba9876543210 -v 0123456789abcdef -i README.md' 'openssl des-cbc -a -K fedcba9876543210 -iv 0123456789abcdef -in README.md'
 
+    # Simple decryption tests on files with size from 0 -> 8
+    test_des_ecb_decrypt ./tests/file_size_0 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_0 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_0 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_0 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_0 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_0 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_1 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_1 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_1 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_1 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_1 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_1 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_2 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_2 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_2 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_2 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_2 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_2 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_3 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_3 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_3 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_3 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_3 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_3 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_4 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_4 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_4 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_4 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_4 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_4 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_5 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_5 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_5 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_5 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_5 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_5 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_6 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_6 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_6 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_6 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_6 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_6 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_7 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_7 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_7 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_7 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_7 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_7 f1f2fadf589cf403
+
+    test_des_ecb_decrypt ./tests/file_size_8 ffffffffffffffff
+    test_des_ecb_decrypt ./tests/file_size_8 0123456789abcdef
+    test_des_ecb_decrypt ./tests/file_size_8 fedcba9876543210
+    test_des_ecb_decrypt ./tests/file_size_8 5874693201547864
+    test_des_ecb_decrypt ./tests/file_size_8 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt ./tests/file_size_8 f1f2fadf589cf403
+
+    test_des_cbc_decrypt ./tests/file_size_0 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_0 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_0 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_0 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_0 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_0 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_1 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_1 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_1 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_1 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_1 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_1 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_2 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_2 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_2 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_2 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_2 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_2 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_3 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_3 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_3 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_3 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_3 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_3 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_4 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_4 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_4 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_4 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_4 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_4 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_5 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_5 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_5 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_5 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_5 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_5 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_6 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_6 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_6 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_6 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_6 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_6 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_7 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_7 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_7 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_7 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_7 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_7 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt ./tests/file_size_8 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt ./tests/file_size_8 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt ./tests/file_size_8 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt ./tests/file_size_8 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt ./tests/file_size_8 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt ./tests/file_size_8 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    # Simple decryption tests on big files
     test_des_ecb_decrypt Makefile ffffffffffffffff
     test_des_ecb_decrypt README.md ffffffffffffffff
     test_des_ecb_decrypt Makefile 0123456789abcdef
@@ -280,4 +498,153 @@ then
     test_des_cbc_decrypt README.md 0123456789abcdef 0123456789abcdef des-cbc
     test_des_cbc_decrypt Makefile fedcba9876543210 fedcba9876543210 des-cbc
     test_des_cbc_decrypt README.md fedcba9876543210 fedcba9876543210 des-cbc
+
+    # Simple decryption tests on files with size from 0 -> 8 with -a option
+    test_des_ecb_decrypt_a ./tests/file_size_0 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_0 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_0 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_0 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_0 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_0 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_1 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_1 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_1 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_1 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_1 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_1 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_2 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_2 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_2 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_2 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_2 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_2 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_3 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_3 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_3 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_3 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_3 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_3 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_4 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_4 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_4 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_4 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_4 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_4 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_5 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_5 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_5 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_5 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_5 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_5 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_6 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_6 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_6 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_6 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_6 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_6 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_7 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_7 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_7 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_7 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_7 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_7 f1f2fadf589cf403
+
+    test_des_ecb_decrypt_a ./tests/file_size_8 ffffffffffffffff
+    test_des_ecb_decrypt_a ./tests/file_size_8 0123456789abcdef
+    test_des_ecb_decrypt_a ./tests/file_size_8 fedcba9876543210
+    test_des_ecb_decrypt_a ./tests/file_size_8 5874693201547864
+    test_des_ecb_decrypt_a ./tests/file_size_8 a58e69dfc4c9a8ff
+    test_des_ecb_decrypt_a ./tests/file_size_8 f1f2fadf589cf403
+
+    test_des_cbc_decrypt_a ./tests/file_size_0 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_0 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_0 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_0 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_0 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_0 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_1 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_1 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_1 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_1 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_1 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_1 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_2 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_2 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_2 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_2 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_2 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_2 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_3 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_3 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_3 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_3 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_3 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_3 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_4 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_4 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_4 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_4 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_4 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_4 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_5 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_5 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_5 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_5 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_5 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_5 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_6 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_6 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_6 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_6 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_6 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_6 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_7 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_7 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_7 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_7 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_7 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_7 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    test_des_cbc_decrypt_a ./tests/file_size_8 ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a ./tests/file_size_8 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a ./tests/file_size_8 fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a ./tests/file_size_8 5874693201547864 5874693201547864 des
+    test_des_cbc_decrypt_a ./tests/file_size_8 a58e69dfc4c9a8ff a58e69dfc4c9a8ff des
+    test_des_cbc_decrypt_a ./tests/file_size_8 f1f2fadf589cf403 f1f2fadf589cf403 des
+
+    # Simple decryption tests on big files with -a option
+    test_des_ecb_decrypt_a Makefile ffffffffffffffff
+    test_des_ecb_decrypt_a README.md ffffffffffffffff
+    test_des_ecb_decrypt_a Makefile 0123456789abcdef
+    test_des_ecb_decrypt_a README.md 0123456789abcdef
+    test_des_ecb_decrypt_a Makefile fedcba9876543210
+    test_des_ecb_decrypt_a README.md fedcba9876543210
+
+    test_des_cbc_decrypt_a Makefile ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a README.md ffffffffffffffff ffffffffffffffff des
+    test_des_cbc_decrypt_a Makefile 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a README.md 0123456789abcdef 0123456789abcdef des
+    test_des_cbc_decrypt_a Makefile fedcba9876543210 fedcba9876543210 des
+    test_des_cbc_decrypt_a README.md fedcba9876543210 fedcba9876543210 des
+
+    test_des_cbc_decrypt_a Makefile ffffffffffffffff ffffffffffffffff des-cbc
+    test_des_cbc_decrypt_a README.md ffffffffffffffff ffffffffffffffff des-cbc
+    test_des_cbc_decrypt_a Makefile 0123456789abcdef 0123456789abcdef des-cbc
+    test_des_cbc_decrypt_a README.md 0123456789abcdef 0123456789abcdef des-cbc
+    test_des_cbc_decrypt_a Makefile fedcba9876543210 fedcba9876543210 des-cbc
+    test_des_cbc_decrypt_a README.md fedcba9876543210 fedcba9876543210 des-cbc
 fi
