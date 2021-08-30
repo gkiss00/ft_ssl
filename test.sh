@@ -192,11 +192,11 @@ test_des () {
 
 test_des_in () {
     
-    if ( diff <($1 | $2) <($3 | $4) )
+    if ( diff <($1 | $2) <($1 | $3) )
     then
-        echo -e "\033[0;32m[OK]\033[0m $4"
+        echo -e "\033[0;32m[OK]\033[0m $3"
     else
-        echo -e "\033[0;31m[ERROR]\033[0m $4"
+        echo -e "\033[0;31m[ERROR]\033[0m $3"
     fi
 }
 
@@ -255,35 +255,35 @@ test_des_cbc_decrypt_a () {
 if [[ $1 == '' || $1 == 'des' ]]
 then
     # Simple encryption tests from stdin with size from 0 -> 8
-    test_des_in 'echo -n ""' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n ""'  './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef'
-    test_des_in 'echo -n "1"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "1"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "22"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "22"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "333"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "333"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "4444"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "4444"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "55555"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "55555"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "666666"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "666666"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "7777777"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "7777777"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "88888888"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "88888888"' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n ""' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -k ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "1"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "22"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "333"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "4444"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "55555"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "666666"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "7777777"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "88888888"' './ft_ssl des -k ffffffffffffffff -v 0123456789abcdef' 'openssl des -K ffffffffffffffff -iv 0123456789abcdef'
 
-    test_des_in 'echo -n ""' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n ""'  'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "1"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "1"' 'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "22"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "22"' 'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "333"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "333"' 'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "4444"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "4444"' 'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "55555"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "55555"' 'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "666666"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "666666"' 'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "7777777"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "7777777"' 'openssl des-ecb -K ffffffffffffffff'
-    test_des_in 'echo -n "88888888"' './ft_ssl des-ecb -k ffffffffffffffff' 'echo -n "88888888"' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n ""' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "1"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "22"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "333"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "4444"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "55555"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "666666"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "7777777"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
+    test_des_in 'echo -n "88888888"' './ft_ssl des-ecb -k ffffffffffffffff' 'openssl des-ecb -K ffffffffffffffff'
 
-    test_des_in 'echo -n ""' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n ""'  'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "1"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "1"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "22"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "22"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "333"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "333"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "4444"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "4444"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "55555"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "55555"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "666666"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "666666"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "7777777"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "7777777"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
-    test_des_in 'echo -n "88888888"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'echo -n "88888888"' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n ""' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "1"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "22"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "333"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "4444"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "55555"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "666666"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "7777777"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
+    test_des_in 'echo -n "88888888"' './ft_ssl des-cbc -k ffffffffffffffff -v 0123456789abcdef' 'openssl des-cbc -K ffffffffffffffff -iv 0123456789abcdef'
 
     
     # Simple encryption tests on files with size from 0 -> 8
