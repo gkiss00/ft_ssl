@@ -8,7 +8,8 @@
 
 void ft_genrsa(int argc, char **argv, t_data *data) {
     parsing_genrsa(argc, argv, data);
-    uint64_t rand = random();
+    srandom(time(NULL));
+    uint64_t rand = (random() << 32) | random();
     printf("%lld\n", rand);
     PRINT_UINT64(&rand);
 }

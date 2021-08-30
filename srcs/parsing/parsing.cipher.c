@@ -19,6 +19,7 @@ static uint8_t *generate_salt(){
     if(salt == NULL)
         exit_error(MALLOC_ERROR);
 
+    srandom(time(NULL));
     long int r = random();
     memcpy(salt, &r, 4);
     r = random();
