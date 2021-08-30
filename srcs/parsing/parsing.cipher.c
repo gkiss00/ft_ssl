@@ -99,8 +99,8 @@ void pre_process(t_data *data){
             }
         } else {
             if(data->input) {
-                uint32_t size = ft_strlen(data->input);
-                data->input = add_extra_bytes(data->input, size);
+                data->input = add_extra_bytes(data->input, data->input_size);
+                data->input_size = data->input_size + (8 - (data->input_size % 8));
             }
         }
     } else {

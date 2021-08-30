@@ -142,9 +142,13 @@ void print_uint8(uint8_t *n)
     }
 }
 
-static uint8_t find_char(uint8_t c, uint8_t str[16]) {
+static uint8_t find_char(uint8_t c, uint8_t base_min[16], uint8_t base_maj[16]) {
     for (int i = 0; i < 16; ++i) {
-        if(c == str[i])
+        if(c == base_min[i])
+            return (uint8_t)i;
+    }
+    for (int i = 0; i < 16; ++i) {
+        if(c == base_maj[i])
             return (uint8_t)i;
     }
     return 16;
@@ -152,12 +156,13 @@ static uint8_t find_char(uint8_t c, uint8_t str[16]) {
 
 // return a binary key from a hex string
 uint8_t *str_to_hex(uint8_t str[16]) {
-    uint8_t base[16] = "0123456789abcdef";
+    uint8_t base_min[16] = "0123456789abcdef";
+    uint8_t base_maj[16] = "0123456789ABCDEF";
     uint8_t res[8];
 
     memset(res, 0, 8);
     for (int i = 0; i < 16; ++i) {
-        uint8_t tmp = find_char(str[i], base);
+        uint8_t tmp = find_char(str[i], base_min, base_maj);
         if(tmp == 16)
             return NULL;
         if(i % 2 == 0) {
